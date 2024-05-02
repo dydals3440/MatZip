@@ -10,19 +10,19 @@ import {
   logout,
   postLogin,
   postSignup,
-} from '../../api/auth';
+} from '@/api/auth';
 import {AxiosError} from 'axios';
 import {
   ResponseError,
   UseMutationCustomOptions,
   UseQueryCustomOptions,
-} from '../../types/common';
-import {removeEncryptStorage, setEncryptStorage} from '../../utils';
-import axiosInstance from '../../api/axios';
-import {removeHeader, setHeader} from '../../utils/header';
+} from '@/types/common';
+import {removeEncryptStorage, setEncryptStorage} from '@/utils';
+
+import {removeHeader, setHeader} from '@/utils/header';
 import {useEffect} from 'react';
-import queryClient from '../../api/queryClient';
-import {numbers, queryKeys, storageKeys} from '../../constants';
+import queryClient from '@/api/queryClient';
+import {numbers, queryKeys, storageKeys} from '@/constants';
 
 // interface UseMutationOptions<TData = unknown, TError = DefaultError, TVariables = void, TContext = unknown> extends OmitKeyof<MutationObserverOptions<TData, TError, TVariables, TContext>, '_defaulted'> {
 // }
