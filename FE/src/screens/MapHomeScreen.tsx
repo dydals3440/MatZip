@@ -1,12 +1,12 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 
-function LoginScreen() {
+const MapHomeScreen = () => {
   return (
     <View>
-      <Text>로그인 스크린</Text>
+      <Text>MapHomeScreen</Text>
     </View>
   );
-}
+};
 
-export default LoginScreen;
+export default MapHomeScreen;
