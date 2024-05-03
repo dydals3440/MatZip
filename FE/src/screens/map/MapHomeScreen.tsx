@@ -15,6 +15,7 @@ import {MapStackParamList} from '@/navigations/stack/MapStackNavigator';
 import useUserLocation from '@/hooks/useUserLocation';
 
 import usePermission from '@/hooks/usePermission';
+import mapStyle from '@/style/mapStyle';
 
 type Navigation = CompositeNavigationProp<
   StackNavigationProp<MapStackParamList>,
@@ -58,6 +59,7 @@ const MapHomeScreen = () => {
         showsUserLocation
         followsUserLocation
         showsMyLocationButton={false}
+        customMapStyle={mapStyle}
       />
       <Pressable
         style={[styles.drawerButton, {top: inset.top || 20}]}
