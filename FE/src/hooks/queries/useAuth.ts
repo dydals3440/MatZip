@@ -1,9 +1,4 @@
-import {
-  useMutation,
-  useQuery,
-  UseQueryOptions,
-  QueryKey,
-} from '@tanstack/react-query';
+import {useMutation, useQuery} from '@tanstack/react-query';
 import {
   getAccessToken,
   getProfile,
@@ -11,12 +6,8 @@ import {
   postLogin,
   postSignup,
 } from '@/api/auth';
-import {AxiosError} from 'axios';
-import {
-  ResponseError,
-  UseMutationCustomOptions,
-  UseQueryCustomOptions,
-} from '@/types/common';
+
+import {UseMutationCustomOptions, UseQueryCustomOptions} from '@/types/common';
 import {removeEncryptStorage, setEncryptStorage} from '@/utils';
 
 import {removeHeader, setHeader} from '@/utils/header';
