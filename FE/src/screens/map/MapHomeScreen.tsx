@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import MapView, {
   Callout,
   LatLng,
@@ -22,6 +22,7 @@ import useUserLocation from '@/hooks/useUserLocation';
 
 import usePermission from '@/hooks/usePermission';
 import mapStyle from '@/style/mapStyle';
+import CustomMarker from '@/components/CustomMarker';
 
 type Navigation = CompositeNavigationProp<
   StackNavigationProp<MapStackParamList>,
@@ -38,6 +39,7 @@ const MapHomeScreen = () => {
 
   usePermission('LOCATION');
 
+  console.log(userLocation);
   const handleLogout = () => {
     logoutMutation.mutate(null);
   };
@@ -73,16 +75,19 @@ const MapHomeScreen = () => {
         showsMyLocationButton={false}
         customMapStyle={mapStyle}
         onLongPress={handleLongPressMapView}>
-        <Marker
+        <CustomMarker
+          color="RED"
+          score={3}
           coordinate={{
-            latitude: 37.5516032365118,
-            longitude: 126.98989626020192,
+            latitude: 37.52016541,
+            longitude: 127.127520372,
           }}
         />
-        <Marker
+        <CustomMarker
+          color="BLUE"
           coordinate={{
-            latitude: 37.5616032365118,
-            longitude: 126.98989626020192,
+            latitude: 37.550165411,
+            longitude: 127.127520372,
           }}
         />
         {selectLocation && (
