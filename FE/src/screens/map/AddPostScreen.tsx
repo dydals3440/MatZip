@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -16,19 +16,28 @@ import {MapStackParamList} from '@/navigations/stack/MapStackNavigator';
 import CustomButton from '@/components/CustomButton';
 import useForm from '@/hooks/useForm';
 import {validateAddPost} from '@/utils';
+import AddPostHeaderRight from '@/components/AddPostHeaderRight';
 
 type AddPostScreenProps = StackScreenProps<
   MapStackParamList,
   typeof mapNavigations.ADD_POST
 >;
 
-function AddPostScreen({route}: AddPostScreenProps) {
+function AddPostScreen({route, navigation}: AddPostScreenProps) {
   const {location} = route.params;
 
   const descriptionRef = useRef<TextInput | null>(null);
   const addPost = useForm({
     initialValue: {title: '', description: ''},
     validate: validateAddPost,
+  });
+
+  const handleSubmit = () => {};
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => AddPostHeaderRight(handleSubmit),
+    });
   });
 
   return (
