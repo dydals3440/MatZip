@@ -20,6 +20,7 @@ import AddPostHeaderRight from '@/components/AddPostHeaderRight';
 import useMutationCreatePost from '@/hooks/queries/useMutateCreatePost';
 import {MarkerColor} from '@/types/domain';
 import useGetAddress from '@/hooks/useGetAddress';
+import MarkerSelector from '@/components/MarkerSelector';
 
 type AddPostScreenProps = StackScreenProps<
   MapStackParamList,
@@ -94,6 +95,7 @@ function AddPostScreen({route, navigation}: AddPostScreenProps) {
             {...addPost.getTextInputProps('description')}
           />
         </View>
+        <MarkerSelector />
       </ScrollView>
     </SafeAreaView>
   );
