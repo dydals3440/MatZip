@@ -21,6 +21,7 @@ import useMutationCreatePost from '@/hooks/queries/useMutateCreatePost';
 import {MarkerColor} from '@/types/domain';
 import useGetAddress from '@/hooks/useGetAddress';
 import MarkerSelector from '@/components/MarkerSelector';
+import ScoreInput from '@/components/ScoreInput';
 
 type AddPostScreenProps = StackScreenProps<
   MapStackParamList,
@@ -41,6 +42,10 @@ function AddPostScreen({route, navigation}: AddPostScreenProps) {
 
   const handleSelectMarker = (name: MarkerColor) => {
     setMarkerColor(name);
+  };
+
+  const handleChangeScore = (value: number) => {
+    setScore(value);
   };
 
   const handleSubmit = () => {
@@ -100,9 +105,11 @@ function AddPostScreen({route, navigation}: AddPostScreenProps) {
           />
         </View>
         <MarkerSelector
+          score={score}
           markerColor={markerColor}
           onPressMarker={handleSelectMarker}
         />
+        <ScoreInput score={score} onChangeScore={handleChangeScore} />
       </ScrollView>
     </SafeAreaView>
   );
