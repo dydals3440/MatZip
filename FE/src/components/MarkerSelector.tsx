@@ -2,18 +2,35 @@ import React from 'react';
 import {Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
 import CustomMarker from './CustomMarker';
 import {colors} from '@/constants';
+import {MarkerColor} from '@/types/domain';
 
-interface MarkerSelectorProps {}
+interface MarkerSelectorProps {
+  markerColor: MarkerColor;
+  onPressMarker: (color: MarkerColor) => void;
+}
 
-const MarkerSelector = ({}: MarkerSelectorProps) => {
+const categoryList: MarkerColor[] = [
+  'RED',
+  'YELLOW',
+  'GREEN',
+  'BLUE',
+  'PURPLE',
+];
+
+const MarkerSelector = ({markerColor, onPressMarker}: MarkerSelectorProps) => {
   return (
     <View style={styles.container}>
       <Text style={styles.markerLabel}>마커 선택</Text>
-      <ScrollView>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <View style={styles.markerInputScroll}>
-          {['RED', 'YELLOW', 'GREEN', 'BLUE', 'PURPLE'].map(color => {
+          {categoryList.map(color => {
             return (
-              <Pressable style={styles.markerBox}>
+              <Pressable
+                style={[
+                  styles.markerBox,
+                  markerColor === color && styles.pressedMarker,
+                ]}
+                onPress={() => onPressMarker(color)}>
                 <CustomMarker color={color} />
               </Pressable>
             );
@@ -44,6 +61,11 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     backgroundColor: colors.GRAY_100,
+    borderRadius: 6,
+  },
+  pressedMarker: {
+    borderWidth: 2,
+    borderColor: colors.RED_500,
   },
 });
 

@@ -39,6 +39,10 @@ function AddPostScreen({route, navigation}: AddPostScreenProps) {
   const [score, setScore] = useState(5);
   const address = useGetAddress(location);
 
+  const handleSelectMarker = (name: MarkerColor) => {
+    setMarkerColor(name);
+  };
+
   const handleSubmit = () => {
     const body = {
       date: new Date(),
@@ -95,7 +99,10 @@ function AddPostScreen({route, navigation}: AddPostScreenProps) {
             {...addPost.getTextInputProps('description')}
           />
         </View>
-        <MarkerSelector />
+        <MarkerSelector
+          markerColor={markerColor}
+          onPressMarker={handleSelectMarker}
+        />
       </ScrollView>
     </SafeAreaView>
   );
