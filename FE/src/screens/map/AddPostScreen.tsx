@@ -15,13 +15,15 @@ import {colors, mainNavigations, mapNavigations} from '@/constants';
 import {MapStackParamList} from '@/navigations/stack/MapStackNavigator';
 import CustomButton from '@/components/CustomButton';
 import useForm from '@/hooks/useForm';
-import {validateAddPost} from '@/utils';
+import {getDateWithSeparator, validateAddPost} from '@/utils';
 import AddPostHeaderRight from '@/components/AddPostHeaderRight';
 import useMutationCreatePost from '@/hooks/queries/useMutateCreatePost';
 import {MarkerColor} from '@/types/domain';
 import useGetAddress from '@/hooks/useGetAddress';
 import MarkerSelector from '@/components/MarkerSelector';
 import ScoreInput from '@/components/ScoreInput';
+import DatePickerOption from '@/components/DatePickerOption';
+import useModal from '@/hooks/useModal';
 
 type AddPostScreenProps = StackScreenProps<
   MapStackParamList,
@@ -32,13 +34,25 @@ function AddPostScreen({route, navigation}: AddPostScreenProps) {
   const {location} = route.params;
   const descriptionRef = useRef<TextInput | null>(null);
   const createPost = useMutationCreatePost();
+  const address = useGetAddress(location);
   const addPost = useForm({
     initialValue: {title: '', description: ''},
     validate: validateAddPost,
   });
   const [markerColor, setMarkerColor] = useState<MarkerColor>('RED');
   const [score, setScore] = useState(5);
-  const address = useGetAddress(location);
+  const [date, setDate] = useState(new Date());
+  const dateOption = useModal();
+  const [isPicked, setIsPicked] = useState(false);
+
+  const handleConfirmDate = () => {
+    setIsPicked(true);
+    dateOption.hide();
+  };
+
+  const handleChangeDate = (pickedDate: Date) => {
+    setDate(pickedDate);
+  };
 
   const handleSelectMarker = (name: MarkerColor) => {
     setMarkerColor(name);
@@ -50,7 +64,7 @@ function AddPostScreen({route, navigation}: AddPostScreenProps) {
 
   const handleSubmit = () => {
     const body = {
-      date: new Date(),
+      date,
       title: addPost.values.title,
       description: addPost.values.description,
       color: markerColor,
@@ -82,7 +96,12 @@ function AddPostScreen({route, navigation}: AddPostScreenProps) {
               <Octicons name="location" size={16} color={colors.GRAY_500} />
             }
           />
-          <CustomButton variant="outlined" size="large" label="날짜 선택" />
+          <CustomButton
+            variant="outlined"
+            size="large"
+            label={isPicked ? getDateWithSeparator(date, '. ') : '날짜 선택'}
+            onPress={dateOption.show}
+          />
           <InputField
             placeholder="제목을 입력하세요."
             error={addPost.errors.title}
@@ -110,6 +129,12 @@ function AddPostScreen({route, navigation}: AddPostScreenProps) {
           onPressMarker={handleSelectMarker}
         />
         <ScoreInput score={score} onChangeScore={handleChangeScore} />
+        <DatePickerOption
+          date={date}
+          isVisible={dateOption.isVisible}
+          onChangeDate={handleChangeDate}
+          onConfirmDate={handleConfirmDate}
+        />
       </ScrollView>
     </SafeAreaView>
   );
