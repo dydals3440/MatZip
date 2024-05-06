@@ -24,6 +24,7 @@ import MarkerSelector from '@/components/MarkerSelector';
 import ScoreInput from '@/components/ScoreInput';
 import DatePickerOption from '@/components/DatePickerOption';
 import useModal from '@/hooks/useModal';
+import ImageInput from '@/components/ImageInput';
 
 type AddPostScreenProps = StackScreenProps<
   MapStackParamList,
@@ -129,6 +130,7 @@ function AddPostScreen({route, navigation}: AddPostScreenProps) {
           onPressMarker={handleSelectMarker}
         />
         <ScoreInput score={score} onChangeScore={handleChangeScore} />
+        <ImageInput onChange={() => {}} />
         <DatePickerOption
           date={date}
           isVisible={dateOption.isVisible}
