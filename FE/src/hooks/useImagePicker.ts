@@ -27,6 +27,15 @@ function useImagePicker({initialImages = []}: UseImagePickerProps) {
     setImageUris(newImageUris);
   };
 
+  // 현재 위치와, 이동할 위치를 받아서 이동시킴
+  const changeImageUrisOrder = (fromIndex: number, toIndex: number) => {
+    const copyImageUris = [...imageUris];
+    const [removedImages] = copyImageUris.splice(fromIndex, 1);
+    copyImageUris.splice(toIndex, 0, removedImages);
+
+    setImageUris(copyImageUris);
+  };
+
   const handleChange = () => {
     ImagePicker.openPicker({
       mediaType: 'photo',
@@ -54,6 +63,7 @@ function useImagePicker({initialImages = []}: UseImagePickerProps) {
     imageUris,
     handleChange,
     delete: deleteImageUri,
+    changeOrder: changeImageUrisOrder,
   };
 }
 

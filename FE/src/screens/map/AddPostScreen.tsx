@@ -147,6 +147,7 @@ function AddPostScreen({route, navigation}: AddPostScreenProps) {
           <PreviewImageList
             imageUris={imagePicker.imageUris}
             onDelete={imagePicker.delete}
+            onChangeOrder={imagePicker.changeOrder}
           />
         </View>
         <DatePickerOption

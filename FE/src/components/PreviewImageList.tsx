@@ -8,9 +8,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 interface PreviewImageListProps {
   imageUris: ImageUri[];
   onDelete?: (uri: string) => void;
+  onChangeOrder?: (fromIndex: number, toIndex: number) => void;
 }
 
-const PreviewImageList = ({imageUris, onDelete}: PreviewImageListProps) => {
+const PreviewImageList = ({
+  imageUris,
+  onDelete,
+  onChangeOrder,
+}: PreviewImageListProps) => {
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <View style={styles.container}>
@@ -34,6 +39,34 @@ const PreviewImageList = ({imageUris, onDelete}: PreviewImageListProps) => {
                 onPress={() => onDelete && onDelete(uri)}>
                 <Ionicons name="close" size={16} color={colors.WHITE} />
               </Pressable>
+
+              {index > 0 && (
+                <Pressable
+                  style={[styles.imageButton, styles.moveLeftButton]}
+                  onPress={() =>
+                    onChangeOrder && onChangeOrder(index, index - 1)
+                  }>
+                  <Ionicons
+                    name="arrow-back-outline"
+                    size={16}
+                    color={colors.WHITE}
+                  />
+                </Pressable>
+              )}
+
+              {index < imageUris.length - 1 && (
+                <Pressable
+                  style={[styles.imageButton, styles.moveRightButton]}
+                  onPress={() =>
+                    onChangeOrder && onChangeOrder(index, index + 1)
+                  }>
+                  <Ionicons
+                    name="arrow-forward-outline"
+                    size={16}
+                    color={colors.WHITE}
+                  />
+                </Pressable>
+              )}
             </Pressable>
           );
         })}
@@ -63,6 +96,14 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     top: 0,
+    right: 0,
+  },
+  moveLeftButton: {
+    bottom: 0,
+    left: 0,
+  },
+  moveRightButton: {
+    bottom: 0,
     right: 0,
   },
 });
