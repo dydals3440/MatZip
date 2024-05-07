@@ -2,6 +2,7 @@ import {ResponsePost, getPosts} from '@/api';
 import {queryKeys} from '@/constants';
 import {ResponseError} from '@/types/common';
 import {
+  InfiniteData,
   QueryKey,
   UseInfiniteQueryOptions,
   useInfiniteQuery,
@@ -13,7 +14,8 @@ function useGetInfinitePosts(
     ResponsePost[],
     ResponseError,
     // 그냥 data 리턴시, InfiniteData<ResponsePost[], number> 타입으로.
-    ResponsePost[][],
+    // ResponsePost[][],
+    InfiniteData<ResponsePost[], number>,
     ResponsePost[],
     QueryKey,
     number
@@ -31,7 +33,7 @@ function useGetInfinitePosts(
     // data.pages로 리턴값이 나옴.
     // select는 반환값을 변환해줌.
     // select를 통해 데이터 변환.
-    select: data => data.pages,
+    // select: data => data.pages,
     ...queryOptions,
   });
 }
