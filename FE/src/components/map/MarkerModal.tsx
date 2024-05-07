@@ -13,7 +13,7 @@ import {
 import Octicons from 'react-native-vector-icons/Octicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-import CustomMarker from './CustomMarker';
+import CustomMarker from '../common/CustomMarker';
 import {colors} from '@/constants';
 import useGetPost from '@/hooks/queries/useGetPost';
 import {getDateWithSeparator} from '@/utils';

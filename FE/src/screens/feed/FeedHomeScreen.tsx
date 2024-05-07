@@ -1,4 +1,4 @@
-import FeedList from '@/components/FeedList';
+import FeedList from '@/components/feed/FeedList';
 import React from 'react';
 import {StyleSheet, View, Text, SafeAreaView} from 'react-native';
 
