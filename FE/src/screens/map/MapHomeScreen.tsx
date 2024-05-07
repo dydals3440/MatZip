@@ -25,8 +25,8 @@ import mapStyle from '@/style/mapStyle';
 import CustomMarker from '@/components/CustomMarker';
 import useGetMarkers from '@/hooks/queries/useGetMarkers';
 import Config from 'react-native-config';
-
-console.log('CONFIG TEST', Config.TEST);
+import MarkerModal from '@/components/MarkerModal';
+import useModal from '@/hooks/useModal';
 
 type Navigation = CompositeNavigationProp<
   StackNavigationProp<MapStackParamList>,
@@ -40,7 +40,9 @@ const MapHomeScreen = () => {
   const mapRef = useRef<MapView | null>(null);
   const {userLocation, isUserLocationError} = useUserLocation();
   const [selectLocation, setSelectLocation] = useState<LatLng | null>();
+  const [markerId, setMarkerId] = useState<number | null>(null);
   const {data: markers} = useGetMarkers();
+  const markerModal = useModal();
 
   usePermission('LOCATION');
 
@@ -52,8 +54,10 @@ const MapHomeScreen = () => {
     });
   };
 
-  const handlePressMarker = (coordinate: LatLng) => {
+  const handlePressMarker = (id: number, coordinate: LatLng) => {
     moveMapView(coordinate);
+    setMarkerId(id);
+    markerModal.show();
   };
 
   const handleLongPressMapView = ({nativeEvent}: LongPressEvent) => {
@@ -109,7 +113,7 @@ const MapHomeScreen = () => {
             color={color}
             score={score}
             coordinate={coordinate}
-            onPress={() => handlePressMarker(coordinate)}
+            onPress={() => handlePressMarker(id, coordinate)}
           />
         ))}
         {selectLocation && (
@@ -131,6 +135,12 @@ const MapHomeScreen = () => {
           <MaterialIcons name="my-location" color={colors.WHITE} size={25} />
         </Pressable>
       </View>
+
+      <MarkerModal
+        markerId={markerId}
+        isVisible={markerModal.isVisible}
+        hide={markerModal.hide}
+      />
     </>
   );
 };

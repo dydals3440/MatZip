@@ -1,7 +1,7 @@
 import {ImageUri, Post} from '@/types/domain';
 import axiosInstance from './axios';
 
-type ResponsePost = Post & {images: ImageUri};
+type ResponsePost = Post & {images: ImageUri[]};
 
 // Post를 생성할 떄 id는 필요하지 않다. (Auto Increment이기 때문)
 type RequestCreatePost = Omit<Post, 'id'> & {imageUris: ImageUri[]};
@@ -12,6 +12,13 @@ const createPost = async (body: RequestCreatePost): Promise<ResponsePost> => {
   return data;
 };
 
-export {createPost};
+type ResponseSinglePost = ResponsePost & {isFavorite: boolean};
 
-export type {ResponsePost, RequestCreatePost};
+const getPost = async (id: number): Promise<ResponseSinglePost> => {
+  const {data} = await axiosInstance.get(`/posts/${id}`);
+
+  return data;
+};
+
+export {createPost, getPost};
+export type {ResponseSinglePost, RequestCreatePost};
