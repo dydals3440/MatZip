@@ -44,6 +44,18 @@ const MapHomeScreen = () => {
 
   usePermission('LOCATION');
 
+  const moveMapView = (coordinate: LatLng) => {
+    mapRef.current?.animateToRegion({
+      ...coordinate,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    });
+  };
+
+  const handlePressMarker = (coordinate: LatLng) => {
+    moveMapView(coordinate);
+  };
+
   const handleLongPressMapView = ({nativeEvent}: LongPressEvent) => {
     setSelectLocation(nativeEvent.coordinate);
   };
@@ -69,12 +81,7 @@ const MapHomeScreen = () => {
       // 에러 메시지 표시
       return;
     }
-    mapRef.current?.animateToRegion({
-      latitude: userLocation.latitude,
-      longitude: userLocation.longitude,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    });
+    moveMapView(userLocation);
   };
 
   // 1. 나의 위치 구하고. (geolocation)
@@ -102,6 +109,7 @@ const MapHomeScreen = () => {
             color={color}
             score={score}
             coordinate={coordinate}
+            onPress={() => handlePressMarker(coordinate)}
           />
         ))}
         {selectLocation && (
