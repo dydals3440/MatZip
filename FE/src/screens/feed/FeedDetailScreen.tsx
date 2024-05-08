@@ -8,7 +8,7 @@ import {
 import useGetPost from '@/hooks/queries/useGetPost';
 import {FeedStackParamlist} from '@/navigations/stack/FeedStackNavigator';
 import {StackScreenProps} from '@react-navigation/stack';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Dimensions,
   Image,
@@ -32,6 +32,7 @@ import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
 import useLocationStore from '@/store/useLocationStore';
 import useModal from '@/hooks/useModal';
 import FeedDetailOption from '@/components/feed/FeedDetailOption';
+import useDetailStore from '@/store/useDetailPostStore';
 
 type FeedDetailScreenProps = CompositeScreenProps<
   StackScreenProps<FeedStackParamlist, typeof feedNavigations.FEED_DETAIL>,
@@ -44,6 +45,11 @@ const FeedDetailScreen = ({route, navigation}: FeedDetailScreenProps) => {
   const insets = useSafeAreaInsets();
   const {setMoveLocation} = useLocationStore();
   const detailOption = useModal();
+  const {setDetailPost} = useDetailStore();
+
+  useEffect(() => {
+    post && setDetailPost(post);
+  }, [post]);
 
   if (isPending || isError) {
     return <></>;

@@ -1,18 +1,59 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {Alert, StyleSheet} from 'react-native';
 import {CompoundOption} from '../common/CompoundOption';
+import useMutateDeletePost from '@/hooks/queries/useMutateDeletePost';
+import useDetailStore from '@/store/useDetailPostStore';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {FeedStackParamlist} from '@/navigations/stack/FeedStackNavigator';
+import {alerts} from '@/constants';
 
 interface FeedDetailOptionProps {
   isVisible: boolean;
   hideOption: () => void;
 }
 
+// 피드에서 상세로 들어갔을 때 해당정보를 Zustand를 이용해서 젖아해놓는 스토어 만듬.
+
 const FeedDetailOption = ({isVisible, hideOption}: FeedDetailOptionProps) => {
+  const navigation = useNavigation<StackNavigationProp<FeedStackParamlist>>();
+  const deletePost = useMutateDeletePost();
+  const {detailPost} = useDetailStore();
+
+  const handleDeletePost = () => {
+    if (!detailPost) {
+      return;
+    }
+
+    Alert.alert(alerts.DELETE_POST.TITLE, alerts.DELETE_POST.DESCRIPTION, [
+      {
+        text: '삭제',
+        onPress: () => {
+          deletePost.mutate(detailPost.id, {
+            onSuccess: () => {
+              // 옵션을 다시 닫아줌. 삭제 후
+              hideOption();
+              // 다시 피드 목록으로 이동
+              navigation.goBack();
+            },
+          });
+        },
+        style: 'destructive',
+      },
+      {
+        text: '취소',
+        style: 'cancel',
+      },
+    ]);
+  };
+
   return (
     <CompoundOption isVisible={isVisible} hideOption={hideOption}>
       <CompoundOption.Background>
         <CompoundOption.Container>
-          <CompoundOption.Button isDanger>삭제하기</CompoundOption.Button>
+          <CompoundOption.Button isDanger onPress={handleDeletePost}>
+            삭제하기
+          </CompoundOption.Button>
           <CompoundOption.Divider />
           <CompoundOption.Button>수정하기</CompoundOption.Button>
         </CompoundOption.Container>
