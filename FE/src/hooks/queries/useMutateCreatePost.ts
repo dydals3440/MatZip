@@ -10,6 +10,9 @@ function useMutationCreatePost(mutationOptions?: UseMutationCustomOptions) {
     mutationFn: createPost,
     // createPost가 성공했을 떄 성공한 데이터를 줌. 그 데이터를 newMarker에 담아서, 추가해주면 됨.
     onSuccess: newPost => {
+      queryClient.invalidateQueries({
+        queryKey: [queryKeys.POST, queryKeys.GET_POSTS],
+      });
       // 1. 업데이트: 쿼리를 무효화
       // queryClient.invalidateQueries({
       //   queryKey: [queryKeys.MARKER, queryKeys.GET_MARKERS],
