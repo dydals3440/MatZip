@@ -1,11 +1,12 @@
 import React from 'react';
-import {Alert, StyleSheet} from 'react-native';
-import {CompoundOption} from '../common/CompoundOption';
+import {Alert} from 'react-native';
+import {useNavigation} from '@react-navigation/core';
+import {StackNavigationProp} from '@react-navigation/stack';
+
+import {FeedStackParamlist} from '@/navigations/stack/FeedStackNavigator';
 import useMutateDeletePost from '@/hooks/queries/useMutateDeletePost';
 import useDetailStore from '@/store/useDetailPostStore';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {FeedStackParamlist} from '@/navigations/stack/FeedStackNavigator';
+import {CompoundOption} from '../common/CompoundOption';
 import {alerts, feedNavigations} from '@/constants';
 
 interface FeedDetailOptionProps {
@@ -81,7 +82,5 @@ const FeedDetailOption = ({isVisible, hideOption}: FeedDetailOptionProps) => {
     </CompoundOption>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default FeedDetailOption;
