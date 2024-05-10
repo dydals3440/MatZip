@@ -60,6 +60,34 @@ const updateFavoritePost = async (id: number): Promise<number> => {
   return data;
 };
 
+const getSearchPosts = async (
+  query: string,
+  page = 1,
+): Promise<ResponsePost[]> => {
+  const {data} = await axiosInstance.get(
+    `/posts/my/search?query=${query}&page=${page}`,
+  );
+  return data;
+};
+
+type CalendarPost = {
+  id: number;
+  title: string;
+  address: string;
+};
+
+// 1일에 해당하는 장소정보, 2일에 해당하는 장소정보 이런식으로 옴.
+type ResponseCalendarPost = Record<number, CalendarPost[]>;
+
+const getCalendarPosts = async (
+  year: number,
+  month: number,
+): Promise<ResponseCalendarPost[]> => {
+  const {data} = await axiosInstance.get(`/posts?year=${year}&month=${month}`);
+
+  return data;
+};
+
 export {
   getPosts,
   createPost,
@@ -68,10 +96,14 @@ export {
   updatePost,
   getFavoritePosts,
   updateFavoritePost,
+  getSearchPosts,
+  getCalendarPosts,
 };
 export type {
   ResponsePost,
   ResponseSinglePost,
   RequestCreatePost,
   RequestUpdatePost,
+  CalendarPost,
+  ResponseCalendarPost,
 };
