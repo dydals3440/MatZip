@@ -9,6 +9,11 @@ interface CalendarHomeScreenProps {}
 const CalendarHomeScreen = ({}: CalendarHomeScreenProps) => {
   const currentMonthYear = getMonthYearDetails(new Date());
   const [monthYear, setMonthYear] = useState(currentMonthYear);
+  const [selectedDate, setSelectedDate] = useState(0);
+
+  const handlePressDate = (date: number) => {
+    setSelectedDate(date);
+  };
 
   const handleUpdateMonth = (increment: number) => {
     setMonthYear(prev => getNewMonthYear(prev, increment));
@@ -16,7 +21,12 @@ const CalendarHomeScreen = ({}: CalendarHomeScreenProps) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Calendar monthYear={monthYear} onChangeMonth={handleUpdateMonth} />
+      <Calendar
+        monthYear={monthYear}
+        onChangeMonth={handleUpdateMonth}
+        selectedDate={selectedDate}
+        onPressDate={handlePressDate}
+      />
     </SafeAreaView>
   );
 };
