@@ -82,7 +82,7 @@ type ResponseCalendarPost = Record<number, CalendarPost[]>;
 const getCalendarPosts = async (
   year: number,
   month: number,
-): Promise<ResponseCalendarPost[]> => {
+): Promise<ResponseCalendarPost> => {
   const {data} = await axiosInstance.get(`/posts?year=${year}&month=${month}`);
 
   return data;

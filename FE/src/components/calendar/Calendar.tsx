@@ -8,21 +8,21 @@ import {MonthYear, isSameAsCurrentDate} from '@/utils';
 import DateBox from './DateBox';
 import {ResponseCalendarPost} from '@/api';
 
-interface CalendarProps {
+interface CalendarProps<T> {
   monthYear: MonthYear;
   selectedDate: number;
-  schedules: Record<number, ResponseCalendarPost>;
+  schedules: Record<number, T>;
   onPressDate: (date: number) => void;
   onChangeMonth: (increment: number) => void;
 }
 
-const Calendar = ({
+const Calendar = <T,>({
   monthYear,
   onChangeMonth,
   selectedDate,
   onPressDate,
   schedules,
-}: CalendarProps) => {
+}: CalendarProps<T>) => {
   const {month, year, lastDate, firstDOW} = monthYear;
 
   return (
