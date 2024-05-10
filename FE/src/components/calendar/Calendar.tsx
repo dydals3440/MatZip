@@ -7,6 +7,7 @@ import DayOfWeeks from './DayOfWeeks';
 import {MonthYear, isSameAsCurrentDate} from '@/utils';
 import DateBox from './DateBox';
 import {ResponseCalendarPost} from '@/api';
+import YearSelector from './YearSelector';
 
 interface CalendarProps<T> {
   monthYear: MonthYear;
@@ -69,6 +70,7 @@ const Calendar = <T,>({
           numColumns={7}
         />
       </View>
+      <YearSelector />
     </>
   );
 };
