@@ -1,11 +1,12 @@
 import {colors} from '@/constants';
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import FeedFavoriteList from './FeedFavoriteList';
 
 const FeedFavoriteScreen = () => {
   return (
     <View style={styles.container}>
-      <Text>즐겨찾기 스크린</Text>
+      <FeedFavoriteList />
     </View>
   );
 };

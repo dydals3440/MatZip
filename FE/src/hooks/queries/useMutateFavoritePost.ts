@@ -11,6 +11,13 @@ function useMutateFavoritePost(mutationOptions?: UseMutationCustomOptions) {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.POST, queryKeys.GET_POST, updatedId],
       });
+      queryClient.invalidateQueries({
+        queryKey: [
+          queryKeys.POST,
+          queryKeys.FAVORITE,
+          queryKeys.GET_FAVORITE_POSTS,
+        ],
+      });
       // network 요청 줄일려면 setQuery이용하는게 좋음.
     },
     ...mutationOptions,
