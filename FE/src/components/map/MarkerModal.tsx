@@ -14,7 +14,12 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import CustomMarker from '../common/CustomMarker';
-import {colors, feedNavigations, mainNavigations} from '@/constants';
+import {
+  colors,
+  feedNavigations,
+  feedTabNavigations,
+  mainNavigations,
+} from '@/constants';
 import useGetPost from '@/hooks/queries/useGetPost';
 import {getDateWithSeparator} from '@/utils';
 import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
@@ -22,6 +27,8 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {FeedStackParamlist} from '@/navigations/stack/FeedStackNavigator';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
+import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
+import {FeedTabParamList} from '@/navigations/tab/FeedTabNavigator';
 
 interface MarkerModalProps {
   markerId: number | null;
@@ -31,7 +38,7 @@ interface MarkerModalProps {
 
 type Navigation = CompositeNavigationProp<
   DrawerNavigationProp<MainDrawerParamList>,
-  StackNavigationProp<FeedStackParamlist>
+  BottomTabNavigationProp<FeedTabParamList>
 >;
 
 const MarkerModal = ({markerId, isVisible, hide}: MarkerModalProps) => {
@@ -44,14 +51,20 @@ const MarkerModal = ({markerId, isVisible, hide}: MarkerModalProps) => {
 
   const handlePressModal = () => {
     navigation.navigate(mainNavigations.FEED, {
-      screen: feedNavigations.FEED_DETAIL,
+      // 홈 먼저 들어 간 후,
+      screen: feedTabNavigations.FEED_HOME,
       params: {
-        id: post.id,
+        screen: feedNavigations.FEED_DETAIL,
+        params: {
+          id: post.id,
+        },
+        initial: false,
       },
       // 피드 목록으로 못들어가는 현상, 드로어에서 피드 클릭시
       // initial false시 스크린 이동시 해당 스크린이 초기 화면으로 지정되는 현상 방지
-      initial: false,
     });
+
+    hide();
   };
 
   return (
