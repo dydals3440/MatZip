@@ -5,6 +5,8 @@ import InputField from '@/components/common/InputField';
 import CustomButton from '@/components/common/CustomButton';
 import {validateSignup} from '@/utils';
 import useAuth from '@/hooks/queries/useAuth';
+import Toast from 'react-native-toast-message';
+import {errorMessages} from '@/constants';
 
 interface SignUpScreenProps {}
 
@@ -21,6 +23,13 @@ const SignUpScreen = ({}: SignUpScreenProps) => {
     const {email, password} = signup.values;
     signupMutation.mutate(signup.values, {
       onSuccess: () => loginMutation.mutate({email, password}),
+      onError: error =>
+        Toast.show({
+          type: 'error',
+          text1: error.response?.data.message || errorMessages.UNEXPECT_ERROR,
+          position: 'bottom',
+          visibilityTime: 2000,
+        }),
     });
   };
 

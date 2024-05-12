@@ -5,6 +5,8 @@ import useForm from '@/hooks/useForm';
 import {validateLogin} from '@/utils';
 import {useRef} from 'react';
 import useAuth from '@/hooks/queries/useAuth';
+import Toast from 'react-native-toast-message';
+import {errorMessages} from '@/constants';
 
 function LoginScreen() {
   const passwordRef = useRef<TextInput | null>(null);
@@ -18,7 +20,15 @@ function LoginScreen() {
   });
 
   const handleSubmit = () => {
-    loginMutation.mutate(login.values);
+    loginMutation.mutate(login.values, {
+      onError: error =>
+        Toast.show({
+          type: 'error',
+          text1: error.response?.data.message || errorMessages.UNEXPECT_ERROR,
+          position: 'bottom',
+          visibilityTime: 2000,
+        }),
+    });
   };
 
   return (

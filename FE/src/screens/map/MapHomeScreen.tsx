@@ -28,6 +28,7 @@ import MarkerModal from '@/components/map/MarkerModal';
 import useModal from '@/hooks/useModal';
 import useLocationStore from '@/store/useLocationStore';
 import useMoveMapView from '@/hooks/useMoveMapView';
+import Toast from 'react-native-toast-message';
 
 type Navigation = CompositeNavigationProp<
   StackNavigationProp<MapStackParamList>,
@@ -78,6 +79,11 @@ const MapHomeScreen = () => {
   const handlePressUserLocation = () => {
     if (isUserLocationError) {
       // 에러 메시지 표시
+      Toast.show({
+        type: 'error',
+        text1: '위치 권한을 허용해주세요.',
+        position: 'bottom',
+      });
       return;
     }
     moveMapView(userLocation);
