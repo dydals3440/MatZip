@@ -13,6 +13,14 @@ function useMutationCreatePost(mutationOptions?: UseMutationCustomOptions) {
       queryClient.invalidateQueries({
         queryKey: [queryKeys.POST, queryKeys.GET_POSTS],
       });
+      queryClient.invalidateQueries({
+        queryKey: [
+          queryKeys.POST,
+          queryKeys.GET_CALENDAR_POSTS,
+          new Date(newPost.date).getFullYear(),
+          new Date(newPost.date).getMonth() + 1,
+        ],
+      });
       // 1. 업데이트: 쿼리를 무효화
       // queryClient.invalidateQueries({
       //   queryKey: [queryKeys.MARKER, queryKeys.GET_MARKERS],
