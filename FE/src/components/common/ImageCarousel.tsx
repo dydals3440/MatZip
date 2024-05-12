@@ -53,7 +53,7 @@ const ImageCarousel = ({images, pressedIndex = 0}: ImageCarouselProps) => {
                 uri: `${
                   Platform.OS === 'ios'
                     ? 'http://localhost:3030/'
-                    : 'http://10.l0.2.2:3030/'
+                    : 'http://10.10.2.2:3030/'
                 }${item.uri}`,
               }}
               resizeMode="contain"
