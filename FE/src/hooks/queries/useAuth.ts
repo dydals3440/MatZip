@@ -1,7 +1,13 @@
-import {useMutation, useQuery} from '@tanstack/react-query';
+import {MutationFunction, useMutation, useQuery} from '@tanstack/react-query';
 import {
+  ResponseProfile,
+  ResponseToken,
+  appleLogin,
+  deleteAccount,
+  editProfile,
   getAccessToken,
   getProfile,
+  kakaoLogin,
   logout,
   postLogin,
   postSignup,
@@ -32,9 +38,13 @@ function useSignup(mutationOptions?: UseMutationCustomOptions) {
   });
 }
 
-function useLogin(mutationOptions?: UseMutationCustomOptions) {
+function useLogin<T>(
+  loginAPI: MutationFunction<ResponseToken, T>,
+  mutationOptions?: UseMutationCustomOptions,
+) {
   return useMutation({
-    mutationFn: postLogin,
+    mutationFn: loginAPI,
+    // mutationFn: postLogin,
     // 로그인 성공시 처리할 동작
     onSuccess: ({accessToken, refreshToken}) => {
       setEncryptStorage(storageKeys.REFRESH_TOKEN, refreshToken);
@@ -53,6 +63,18 @@ function useLogin(mutationOptions?: UseMutationCustomOptions) {
     },
     ...mutationOptions,
   });
+}
+
+function useEmailLogin(mutationOptions?: UseMutationCustomOptions) {
+  return useLogin(postLogin, mutationOptions);
+}
+
+function useKakaoLogin(mutationOptions?: UseMutationCustomOptions) {
+  return useLogin(kakaoLogin, mutationOptions);
+}
+
+function useAppleLogin(mutationOptions?: UseMutationCustomOptions) {
+  return useLogin(appleLogin, mutationOptions);
 }
 
 function useGetRefreshToken() {
@@ -88,11 +110,25 @@ function useGetRefreshToken() {
 // v4
 // useQuery([queryKeys.AUTH, queryKeys.GET_ACCESS_TOKEN], getAccessToken, { onSuccess, onError })
 
-function useGetProfile(queryOptions?: UseQueryCustomOptions) {
+function useGetProfile(queryOptions?: UseQueryCustomOptions<ResponseProfile>) {
   return useQuery({
-    queryKey: [queryKeys.AUTH, queryKeys.GET_PROFILE],
     queryFn: getProfile,
+    queryKey: [queryKeys.AUTH, queryKeys.GET_PROFILE],
     ...queryOptions,
+  });
+}
+
+function useUpdateProfile(mutationOptions?: UseMutationCustomOptions) {
+  return useMutation({
+    mutationFn: editProfile,
+    // 새로운 프로필이 값으로 전달됨.
+    onSuccess: newProfile => {
+      queryClient.setQueryData(
+        [queryKeys.AUTH, queryKeys.GET_PROFILE],
+        newProfile,
+      );
+    },
+    ...mutationOptions,
   });
 }
 
@@ -102,10 +138,19 @@ function useLogout(mutationOptions?: UseMutationCustomOptions) {
     onSuccess: () => {
       removeHeader('Authorization');
       removeEncryptStorage(storageKeys.REFRESH_TOKEN);
+      queryClient.resetQueries({queryKey: [queryKeys.AUTH]});
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({queryKey: [queryKeys.AUTH]});
-    },
+    // 로그아웃 잘 안되는 현상 수정
+    // onSettled: () => {
+    //   queryClient.invalidateQueries({queryKey: [queryKeys.AUTH]});
+    // },
+    ...mutationOptions,
+  });
+}
+
+function useMutateDeleteAccount(mutationOptions?: UseMutationCustomOptions) {
+  return useMutation({
+    mutationFn: deleteAccount,
     ...mutationOptions,
   });
 }
@@ -119,8 +164,15 @@ function useAuth() {
     enabled: refreshTokenQuery.isSuccess,
   });
   const isLogin = getProfileQuery.isSuccess;
-  const loginMutation = useLogin();
+  const loginMutation = useEmailLogin();
+  const kakaoLoginMutation = useKakaoLogin();
+  const appleLoginMutation = useAppleLogin();
   const logoutMutation = useLogout();
+  const profileMutation = useUpdateProfile();
+  // 회원 탈퇴가 성공하면 로그아웃까지 바로 진행되도록 함.
+  const deleteAccountMutation = useMutateDeleteAccount({
+    onSuccess: () => logoutMutation.mutate(null),
+  });
 
   return {
     signupMutation,
@@ -128,6 +180,10 @@ function useAuth() {
     isLogin,
     getProfileQuery,
     logoutMutation,
+    kakaoLoginMutation,
+    appleLoginMutation,
+    profileMutation,
+    deleteAccountMutation,
   };
 }
 

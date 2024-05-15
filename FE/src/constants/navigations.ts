@@ -2,6 +2,7 @@ const mainNavigations = {
   HOME: 'Home',
   FEED: 'Feed',
   CALENDAR: 'Calendar',
+  SETTING: 'Setting',
 } as const;
 
 // as const로 선언하면 readonly로 만듬
@@ -9,12 +10,14 @@ const authNavigations = {
   AUTH_HOME: 'AuthHome',
   LOGIN: 'Login',
   SIGNUP: 'Signup',
+  KAKAO: 'kakao',
 } as const;
 
 const mapNavigations = {
   MAP_HOME: 'MapHome',
   ADD_POST: 'AddPost',
   SEARCH_LOCATION: 'SearchLocation',
+  SETTING: 'Setting',
 } as const;
 
 const feedNavigations = {
@@ -29,10 +32,17 @@ const feedTabNavigations = {
   FEED_FAVORITE: 'FeedFavorite',
 } as const;
 
+const settingNavigations = {
+  SETTING_HOME: 'SettingHome',
+  EDIT_PROFILE: 'EditProfile',
+  DELETE_ACCOUNT: 'DeleteAccount',
+} as const;
+
 export {
   mainNavigations,
   authNavigations,
   mapNavigations,
   feedNavigations,
   feedTabNavigations,
+  settingNavigations,
 };

@@ -29,6 +29,7 @@ import useModal from '@/hooks/useModal';
 import useLocationStore from '@/store/useLocationStore';
 import useMoveMapView from '@/hooks/useMoveMapView';
 import Toast from 'react-native-toast-message';
+import Config from 'react-native-config';
 
 type Navigation = CompositeNavigationProp<
   StackNavigationProp<MapStackParamList>,
@@ -39,7 +40,7 @@ const MapHomeScreen = () => {
   const inset = useSafeAreaInsets();
   const navigation = useNavigation<Navigation>();
   const {userLocation, isUserLocationError} = useUserLocation();
-  const [selectLocation, setSelectLocation] = useState<LatLng | null>();
+  const {selectLocation, setSelectLocation} = useLocationStore();
   const [markerId, setMarkerId] = useState<number | null>(null);
   const {data: markers} = useGetMarkers();
   const {mapRef, moveMapView, handleChangeDelta} = useMoveMapView();

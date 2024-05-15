@@ -14,11 +14,15 @@ import FeedStackNavigator, {
 } from '../stack/FeedStackNavigator';
 import FeedTabNavigator, {FeedTabParamList} from '../tab/FeedTabNavigator';
 import FeedHomeHeaderLeft from '@/components/feed/FeedHomeHeaderLeft';
+import SettingStackNavigator, {
+  SettingStackParamlist,
+} from '../stack/SettingStackNavigator';
 
 export type MainDrawerParamList = {
   [mainNavigations.HOME]: NavigatorScreenParams<MapStackParamList>;
   [mainNavigations.FEED]: NavigatorScreenParams<FeedTabParamList>;
   [mainNavigations.CALENDAR]: undefined;
+  [mainNavigations.SETTING]: NavigatorScreenParams<SettingStackParamlist>;
 };
 
 const Drawer = createDrawerNavigator<MainDrawerParamList>();
@@ -37,6 +41,10 @@ function DrawerIcons(route: RouteProp<MainDrawerParamList>, focused: boolean) {
     }
     case mainNavigations.CALENDAR: {
       iconName = 'event-note';
+      break;
+    }
+    case mainNavigations.SETTING: {
+      iconName = 'settings';
       break;
     }
   }
@@ -95,6 +103,16 @@ function MainDrawerNavigator() {
           headerShown: true,
           headerLeft: () => FeedHomeHeaderLeft(navigation),
         })}
+      />
+      <Drawer.Screen
+        name={mainNavigations.SETTING}
+        component={SettingStackNavigator}
+        options={{
+          title: '설정',
+          drawerItemStyle: {
+            height: 0,
+          },
+        }}
       />
     </Drawer.Navigator>
   );

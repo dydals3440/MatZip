@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {useEffect, useState} from 'react';
-import Config from 'react-native-config';
 import {LatLng} from 'react-native-maps';
+import Config from 'react-native-config';
 
 type Meta = {
   total_count: number;
@@ -36,7 +36,18 @@ type RegionResponse = {
 
 function useSearchLocation(keyword: string, location: LatLng) {
   const [regionInfo, setRegionInfo] = useState<RegionInfo[]>([]);
+  const [hasNextPage, setHasNextPage] = useState(false);
   const [pageParam, setPageParam] = useState(1);
+  console.log(Config.KAKAO_REST_API_KEY);
+
+  const fetchNextPage = () => {
+    setPageParam(prev => prev + 1);
+  };
+
+  console.log(hasNextPage);
+  const fetchPrevPage = () => {
+    setPageParam(prev => prev - 1);
+  };
 
   useEffect(() => {
     (async () => {
@@ -49,14 +60,19 @@ function useSearchLocation(keyword: string, location: LatLng) {
             },
           },
         );
-        console.log('data', data);
+        // 페이지의 끝인지 아닌지를 판단.
+        setHasNextPage(data.meta.is_end);
+
+        setRegionInfo(data.documents);
       } catch (error) {
-        console.log(error);
+        setRegionInfo([]);
       }
     })();
-  }, [keyword, location]);
+    // 키워드가 없으면 페이지는 1
+    keyword === '' && setPageParam(1);
+  }, [keyword, location, pageParam]);
 
-  return {regionInfo};
+  return {regionInfo, pageParam, fetchNextPage, fetchPrevPage, hasNextPage};
 }
 
 export default useSearchLocation;
