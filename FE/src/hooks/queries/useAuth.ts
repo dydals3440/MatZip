@@ -4,6 +4,7 @@ import {
   ResponseToken,
   appleLogin,
   deleteAccount,
+  editCategory,
   editProfile,
   getAccessToken,
   getProfile,
@@ -20,6 +21,7 @@ import {removeHeader, setHeader} from '@/utils/header';
 import {useEffect} from 'react';
 import queryClient from '@/api/queryClient';
 import {numbers, queryKeys, storageKeys} from '@/constants';
+import {Category, Profile} from '@/types/domain';
 
 // interface UseMutationOptions<TData = unknown, TError = DefaultError, TVariables = void, TContext = unknown> extends OmitKeyof<MutationObserverOptions<TData, TError, TVariables, TContext>, '_defaulted'> {
 // }
@@ -110,11 +112,47 @@ function useGetRefreshToken() {
 // v4
 // useQuery([queryKeys.AUTH, queryKeys.GET_ACCESS_TOKEN], getAccessToken, { onSuccess, onError })
 
-function useGetProfile(queryOptions?: UseQueryCustomOptions<ResponseProfile>) {
+type ResponseSelectProfile = {categories: Category} & Profile;
+
+/**
+ * {"BLUE": "", "GREEN": "", "PURPLE": "", "RED": "", "YELLOW": "", "createdAt": "2024-05-14T07:36:24.393Z", "deletedAt": null, "email": "3482273945", "id": 5, "imageUri": "BFD9B292-B33B-4F88-BC35-8D0ED04383981715717434427.jpg", "kakaoImageUri": null, "loginType": "kakao", "nickname": "", "updatedAt": "2024-05-14T23:15:27.318Z"}
+ */
+
+/**
+ * {"categories": {"BLUE": "", "GREEN": "", "PURPLE": "", "RED": "", "YELLOW": ""}, "createdAt": "2024-05-14T07:36:24.393Z", "deletedAt": null, "email": "3482273945", "id": 5, "imageUri": "BFD9B292-B33B-4F88-BC35-8D0ED04383981715717434427.jpg", "kakaoImageUri": null, "loginType": "kakao", "nickname": "", "updatedAt": "2024-05-14T23:15:27.318Z"}
+ */
+
+const transformProfileCategory = (
+  data: ResponseProfile,
+): ResponseSelectProfile => {
+  const {BLUE, GREEN, PURPLE, RED, YELLOW, ...rest} = data;
+  const categories = {BLUE, GREEN, PURPLE, RED, YELLOW};
+
+  return {categories, ...rest};
+};
+
+function useGetProfile(
+  queryOptions?: UseQueryCustomOptions<ResponseProfile, ResponseSelectProfile>,
+) {
   return useQuery({
     queryFn: getProfile,
     queryKey: [queryKeys.AUTH, queryKeys.GET_PROFILE],
+    // select option을 통해 리턴 값 변경함.
+    select: transformProfileCategory,
     ...queryOptions,
+  });
+}
+
+function useMutateCategory(mutationOptions?: UseMutationCustomOptions) {
+  return useMutation({
+    mutationFn: editCategory,
+    onSuccess: newProfile => {
+      queryClient.setQueryData(
+        [queryKeys.AUTH, queryKeys.GET_PROFILE],
+        newProfile,
+      );
+    },
+    ...mutationOptions,
   });
 }
 
@@ -151,6 +189,8 @@ function useLogout(mutationOptions?: UseMutationCustomOptions) {
 function useMutateDeleteAccount(mutationOptions?: UseMutationCustomOptions) {
   return useMutation({
     mutationFn: deleteAccount,
+    // 데이터 리턴값 변경
+
     ...mutationOptions,
   });
 }
@@ -173,6 +213,7 @@ function useAuth() {
   const deleteAccountMutation = useMutateDeleteAccount({
     onSuccess: () => logoutMutation.mutate(null),
   });
+  const categoryMutation = useMutateCategory();
 
   return {
     signupMutation,
@@ -184,6 +225,7 @@ function useAuth() {
     appleLoginMutation,
     profileMutation,
     deleteAccountMutation,
+    categoryMutation,
   };
 }
 

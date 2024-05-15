@@ -1,3 +1,5 @@
+import {Category} from '@/types/domain';
+
 function isBlank(value: string) {
   return value.trim() === '';
 }
@@ -62,4 +64,23 @@ function validateEditProfile(values: {nickname: string}) {
   return errors;
 }
 
-export {validateLogin, validateSignup, validateAddPost, validateEditProfile};
+function validateCategory(values: Category) {
+  const errors = {
+    RED: '',
+    GREEN: '',
+    YELLOW: '',
+    BLUE: '',
+    PURPLE: '',
+  };
+  // 원하는 검증사항
+
+  return errors;
+}
+
+export {
+  validateLogin,
+  validateSignup,
+  validateAddPost,
+  validateEditProfile,
+  validateCategory,
+};
