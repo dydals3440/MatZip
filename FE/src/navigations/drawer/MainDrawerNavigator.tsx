@@ -1,6 +1,5 @@
 import {createDrawerNavigator} from '@react-navigation/drawer';
 
-import FeedHomeScreen from '@/screens/feed/FeedHomeScreen';
 import CalendarHomeScreen from '@/screens/calendar/CalendarHomeScreen';
 import MapStackNavigator, {MapStackParamList} from '../stack/MapStackNavigator';
 import {colors, mainNavigations} from '@/constants';
@@ -9,14 +8,14 @@ import {NavigatorScreenParams, RouteProp} from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Dimensions} from 'react-native';
 import CustomDrawerContent from './CustomDrawerContent';
-import FeedStackNavigator, {
-  FeedStackParamlist,
-} from '../stack/FeedStackNavigator';
+
 import FeedTabNavigator, {FeedTabParamList} from '../tab/FeedTabNavigator';
 import FeedHomeHeaderLeft from '@/components/feed/FeedHomeHeaderLeft';
 import SettingStackNavigator, {
   SettingStackParamlist,
 } from '../stack/SettingStackNavigator';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 
 export type MainDrawerParamList = {
   [mainNavigations.HOME]: NavigatorScreenParams<MapStackParamList>;
@@ -27,7 +26,11 @@ export type MainDrawerParamList = {
 
 const Drawer = createDrawerNavigator<MainDrawerParamList>();
 
-function DrawerIcons(route: RouteProp<MainDrawerParamList>, focused: boolean) {
+function DrawerIcons(
+  route: RouteProp<MainDrawerParamList>,
+  focused: boolean,
+  theme: ThemeMode,
+) {
   let iconName = '';
 
   switch (route.name) {
@@ -53,12 +56,14 @@ function DrawerIcons(route: RouteProp<MainDrawerParamList>, focused: boolean) {
     <MaterialIcons
       name={iconName}
       size={18}
-      color={focused ? colors.BLACK : colors.GRAY_500}
+      color={focused ? colors[theme].UNCHANGE_BLACK : colors[theme].GRAY_500}
     />
   );
 }
 
 function MainDrawerNavigator() {
+  const {theme} = useThemeStore();
+
   return (
     <Drawer.Navigator
       drawerContent={CustomDrawerContent}
@@ -67,17 +72,18 @@ function MainDrawerNavigator() {
         drawerType: 'front',
         drawerStyle: {
           width: Dimensions.get('screen').width * 0.6,
-          backgroundColor: colors.WHITE,
+          backgroundColor: colors[theme].WHITE,
         },
-        drawerActiveTintColor: colors.BLACK,
-        drawerInactiveTintColor: colors.GRAY_500,
+        drawerActiveTintColor: colors[theme].UNCHANGE_BLACK,
+        drawerInactiveTintColor: colors[theme].GRAY_500,
         // 클릭시 색상
-        drawerActiveBackgroundColor: colors.PINK_200,
-        drawerInactiveBackgroundColor: colors.GRAY_100,
+        drawerActiveBackgroundColor:
+          theme === 'light' ? colors[theme].PINK_200 : colors[theme].PINK_500,
+        drawerInactiveBackgroundColor: colors[theme].GRAY_100,
         drawerLabelStyle: {
           fontWeight: '600',
         },
-        drawerIcon: ({focused}) => DrawerIcons(route, focused),
+        drawerIcon: ({focused}) => DrawerIcons(route, focused, theme),
       })}>
       <Drawer.Screen
         name={mainNavigations.HOME}
@@ -102,6 +108,14 @@ function MainDrawerNavigator() {
           title: '캘린더',
           headerShown: true,
           headerLeft: () => FeedHomeHeaderLeft(navigation),
+          headerStyle: {
+            backgroundColor: colors[theme].WHITE,
+            shadowColor: colors[theme].GRAY_200,
+          },
+          headerTintColor: colors[theme].BLACK,
+          headerTitleStyle: {
+            fontSize: 15,
+          },
         })}
       />
       <Drawer.Screen

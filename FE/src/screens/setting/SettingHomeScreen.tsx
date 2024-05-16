@@ -1,10 +1,12 @@
-import {logout} from '@/api';
 import DarkModeOption from '@/components/setting/DarkModeOption';
 import SettingItem from '@/components/setting/SettingItem';
 import {colors, settingNavigations} from '@/constants';
 import useAuth from '@/hooks/queries/useAuth';
 import useModal from '@/hooks/useModal';
+import useThemeStorage from '@/hooks/useThemeStorage';
 import {SettingStackParamlist} from '@/navigations/stack/SettingStackNavigator';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 import {StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
 import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
@@ -13,6 +15,8 @@ import Octicons from 'react-native-vector-icons/Octicons';
 type SettingHomeScreenProps = StackScreenProps<SettingStackParamlist>;
 
 const SettingHomeScreen = ({navigation}: SettingHomeScreenProps) => {
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
   const {logoutMutation} = useAuth();
   const darkModeOption = useModal();
 
@@ -42,8 +46,14 @@ const SettingHomeScreen = ({navigation}: SettingHomeScreenProps) => {
         <SettingItem
           title="로그아웃"
           onPress={handlePressLogout}
-          color={colors.RED_500}
-          icon={<Octicons name={'sign-out'} color={colors.RED_500} size={16} />}
+          color={colors[theme].RED_500}
+          icon={
+            <Octicons
+              name={'sign-out'}
+              color={colors[theme].RED_500}
+              size={16}
+            />
+          }
         />
         <DarkModeOption
           isVisible={darkModeOption.isVisible}
@@ -54,13 +64,14 @@ const SettingHomeScreen = ({navigation}: SettingHomeScreenProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  space: {
-    height: 30,
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    space: {
+      height: 30,
+    },
+  });
 
 export default SettingHomeScreen;

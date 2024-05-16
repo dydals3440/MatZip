@@ -3,7 +3,10 @@ import EditCategoryHeaderRight from '@/components/setting/EditCategoryHeaderRigh
 import {colorHex, colors, errorMessages} from '@/constants';
 import useAuth from '@/hooks/queries/useAuth';
 import useForm from '@/hooks/useForm';
+import useThemeStorage from '@/hooks/useThemeStorage';
 import {SettingStackParamlist} from '@/navigations/stack/SettingStackNavigator';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 import {MarkerColor} from '@/types/domain';
 import {validateCategory} from '@/utils';
 import {StackScreenProps} from '@react-navigation/stack';
@@ -37,6 +40,8 @@ const categoryPlaceholderList = [
 type EditCategoryScreenProps = StackScreenProps<SettingStackParamlist>;
 
 const EditCategoryScreen = ({navigation}: EditCategoryScreenProps) => {
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
   const refArray = useRef<(TextInput | null)[]>([]);
   const {getProfileQuery, categoryMutation} = useAuth();
   const {categories} = getProfileQuery.data || {};
@@ -120,47 +125,48 @@ const EditCategoryScreen = ({navigation}: EditCategoryScreenProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  contentContainer: {
-    flex: 1,
-    padding: 20,
-    marginBottom: 10,
-  },
-  infoContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 30,
-    borderWidth: 1,
-    borderColor: colors.PINK_700,
-    borderRadius: 3,
-    padding: 10,
-    gap: 10,
-  },
-  infoText: {
-    color: colors.PINK_700,
-    fontSize: 15,
-    fontWeight: '600',
-  },
-  formContainer: {
-    gap: 15,
-  },
-  categoryContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 20,
-  },
-  category: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.PINK_400,
-  },
-  inputContainer: {
-    flex: 1,
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    contentContainer: {
+      flex: 1,
+      padding: 20,
+      marginBottom: 10,
+    },
+    infoContainer: {
+      alignItems: 'center',
+      marginTop: 10,
+      marginBottom: 30,
+      borderWidth: 1,
+      borderColor: colors[theme].PINK_700,
+      borderRadius: 3,
+      padding: 10,
+      gap: 10,
+    },
+    infoText: {
+      color: colors[theme].PINK_700,
+      fontSize: 15,
+      fontWeight: '600',
+    },
+    formContainer: {
+      gap: 15,
+    },
+    categoryContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 20,
+    },
+    category: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: colors[theme].PINK_400,
+    },
+    inputContainer: {
+      flex: 1,
+    },
+  });
 
 export default EditCategoryScreen;

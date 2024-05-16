@@ -1,6 +1,9 @@
 import CustomButton from '@/components/common/CustomButton';
 import {alerts, colors, errorMessages} from '@/constants';
 import useAuth from '@/hooks/queries/useAuth';
+import useThemeStorage from '@/hooks/useThemeStorage';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types/common';
 import React from 'react';
 import {Alert, StyleSheet, Text, View} from 'react-native';
 import Toast from 'react-native-toast-message';
@@ -8,6 +11,8 @@ import Toast from 'react-native-toast-message';
 interface DeleteAccountScreenProps {}
 
 const DeleteAccountScreen = ({}: DeleteAccountScreenProps) => {
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
   const {deleteAccountMutation} = useAuth();
   const handlePressDeleteAccount = () => {
     Alert.alert(
@@ -58,27 +63,28 @@ const DeleteAccountScreen = ({}: DeleteAccountScreenProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    marginBottom: 20,
-  },
-  infoContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 30,
-    borderWidth: 1,
-    borderColor: colors.PINK_700,
-    padding: 10,
-    borderRadius: 3,
-    gap: 10,
-  },
-  infoText: {
-    color: colors.PINK_700,
-    fontSize: 15,
-    fontWeight: '600',
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 20,
+      marginBottom: 20,
+    },
+    infoContainer: {
+      alignItems: 'center',
+      marginTop: 10,
+      marginBottom: 30,
+      borderWidth: 1,
+      borderColor: colors[theme].PINK_700,
+      padding: 10,
+      borderRadius: 3,
+      gap: 10,
+    },
+    infoText: {
+      color: colors[theme].PINK_700,
+      fontSize: 15,
+      fontWeight: '600',
+    },
+  });
 
 export default DeleteAccountScreen;

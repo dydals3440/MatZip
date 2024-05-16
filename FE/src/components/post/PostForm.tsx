@@ -36,6 +36,7 @@ import {FeedStackParamlist} from '@/navigations/stack/FeedStackNavigator';
 import {LatLng} from 'react-native-maps';
 import useDetailStore from '@/store/useDetailPostStore';
 import useMutateUpdatePost from '@/hooks/queries/useMutateUpdatePost';
+import useThemeStore from '@/store/useThemeStore';
 
 interface PostFormProps {
   isEdit?: boolean;
@@ -43,6 +44,7 @@ interface PostFormProps {
 }
 
 const PostForm = ({location, isEdit = false}: PostFormProps) => {
+  const {theme} = useThemeStore();
   const navigation = useNavigation<StackNavigationProp<FeedStackParamlist>>();
   const descriptionRef = useRef<TextInput | null>(null);
   const createPost = useMutationCreatePost();
@@ -131,7 +133,11 @@ const PostForm = ({location, isEdit = false}: PostFormProps) => {
             value={address}
             disabled
             icon={
-              <Octicons name="location" size={16} color={colors.GRAY_500} />
+              <Octicons
+                name="location"
+                size={16}
+                color={colors[theme].GRAY_500}
+              />
             }
           />
           <CustomButton
