@@ -1599,7 +1599,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.20.0, @babel/runtime@npm:^7.8.4":
+"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.20.0, @babel/runtime@npm:^7.8.4":
   version: 7.24.5
   resolution: "@babel/runtime@npm:7.24.5"
   dependencies:
@@ -3224,6 +3224,7 @@ __metadata:
     jest: ^29.6.3
     prettier: 2.8.8
     react: 18.2.0
+    react-error-boundary: ^4.0.13
     react-native: 0.74.0
     react-native-config: ^1.5.1
     react-native-date-picker: ^5.0.2
@@ -8356,6 +8357,17 @@ __metadata:
     shell-quote: ^1.6.1
     ws: ^7
   checksum: e932eb9e3218fba7b4b7d7f1d9c778ec94f51f7fc887d9c28f7e84f3d0f918ab91424782cc4c39b5f19855a363013fc5cf6849691a9476b69a8ce96b9e3d1971
+  languageName: node
+  linkType: hard
+
+"react-error-boundary@npm:^4.0.13":
+  version: 4.0.13
+  resolution: "react-error-boundary@npm:4.0.13"
+  dependencies:
+    "@babel/runtime": ^7.12.5
+  peerDependencies:
+    react: ">=16.13.1"
+  checksum: 50398d080015d51d22c6f94c56f4ea336d10232d72345b36ee6f15b6b643666d20b072829b02f091a80e5af68fe67f68a62ef0d2b649dbd759ead929304449af
   languageName: node
   linkType: hard
 

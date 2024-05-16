@@ -1,7 +1,7 @@
 import {colors, feedNavigations, feedTabNavigations} from '@/constants';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import FeedStackNavigator from '../stack/FeedStackNavigator';
-import FeedFavoriteScreen from '@/components/feed/FeedFavoriteScreen';
+
 import {StyleSheet} from 'react-native';
 import {
   RouteProp,
@@ -11,6 +11,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import FeedHomeHeaderLeft from '@/components/feed/FeedHomeHeaderLeft';
 import useThemeStore from '@/store/useThemeStore';
 import {ThemeMode} from '@/types/common';
+import FeedFavoriteScreen from '@/screens/feed/FeedFavoriteScreen';
 
 export type FeedTabParamList = {
   [feedTabNavigations.FEED_HOME]: {

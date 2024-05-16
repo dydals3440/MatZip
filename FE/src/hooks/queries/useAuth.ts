@@ -36,6 +36,11 @@ import {Category, Profile} from '@/types/domain';
 function useSignup(mutationOptions?: UseMutationCustomOptions) {
   return useMutation({
     mutationFn: postSignup,
+    // ErrorBoundary Option
+    // 회원가입이나, 로그인 같은 경우 에러가 발생하면 이미 가입된 이메일이거나 비밀번호가 틀렸을 경우에도 에러가 발생해서 toast 메시지로 표시가 됨.
+    // true로 설정하지 않거나
+    // 에러코드의 번호가 서버 에러인 경우만에만 에러를 잡도록 설정
+    throwOnError: error => Number(error.response?.status) >= 500,
     ...mutationOptions,
   });
 }
@@ -63,6 +68,7 @@ function useLogin<T>(
         queryKey: [queryKeys.AUTH, queryKeys.GET_PROFILE],
       });
     },
+    throwOnError: error => Number(error.response?.status) >= 500,
     ...mutationOptions,
   });
 }

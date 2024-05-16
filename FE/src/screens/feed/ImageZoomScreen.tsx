@@ -1,10 +1,11 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import ImageCarousel from '../common/ImageCarousel';
+
 import useDetailStore from '@/store/useDetailPostStore';
 import {StackScreenProps} from '@react-navigation/stack';
 import {FeedStackParamlist} from '@/navigations/stack/FeedStackNavigator';
 import {feedNavigations} from '@/constants';
+import ImageCarousel from '@/components/common/ImageCarousel';
 
 type ImageZoomScreenProps = StackScreenProps<
   FeedStackParamlist,

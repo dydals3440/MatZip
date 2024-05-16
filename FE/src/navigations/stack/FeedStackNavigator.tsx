@@ -8,8 +8,9 @@ import FeedHomeHeaderLeft from '@/components/feed/FeedHomeHeaderLeft';
 import FeedDetailScreen from '@/screens/feed/FeedDetailScreen';
 import {LatLng} from 'react-native-maps';
 import EditPostScreen from '@/screens/feed/EditPostScreen';
-import ImageZoomScreen from '@/components/feed/ImageZoomScreen';
+
 import useThemeStore from '@/store/useThemeStore';
+import ImageZoomScreen from '@/screens/feed/ImageZoomScreen';
 
 export type FeedStackParamlist = {
   [feedNavigations.FEED_HOME]: undefined;

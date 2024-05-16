@@ -27,6 +27,9 @@ const FeedList = () => {
     }
   };
 
+  // 피드 목록을 에러바운더리로 스크린에서 감쌌으므로 강제로 에러를 발생시 에러처리 화면이 나옴.
+  // throw new Error();
+
   return (
     <FlatList
       data={posts?.pages.flat()}
