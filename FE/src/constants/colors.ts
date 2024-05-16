@@ -1,7 +1,7 @@
 const common = {
   PINK_200: '#FAE2E9',
   PINK_400: '#EC87A5',
-  PINK_500: 'BF5C79',
+  PINK_500: '#BF5C79',
   PINK_700: '#C63B64',
   BLUE_400: '#B4E0FF',
   BLUE_500: '#0D8AFF',

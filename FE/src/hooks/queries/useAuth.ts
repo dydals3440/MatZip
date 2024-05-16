@@ -86,7 +86,7 @@ function useAppleLogin(mutationOptions?: UseMutationCustomOptions) {
 }
 
 function useGetRefreshToken() {
-  const {data, isSuccess, isError} = useQuery({
+  const {data, isSuccess, isError, isPending} = useQuery({
     queryKey: [queryKeys.AUTH, queryKeys.GET_ACCESS_TOKEN],
     // accessToken 유효시간 30분
     queryFn: getAccessToken,
@@ -113,7 +113,7 @@ function useGetRefreshToken() {
     }
   }, [isError]);
 
-  return {isSuccess, isError};
+  return {isSuccess, isError, isPending};
 }
 // v4
 // useQuery([queryKeys.AUTH, queryKeys.GET_ACCESS_TOKEN], getAccessToken, { onSuccess, onError })
@@ -220,6 +220,7 @@ function useAuth() {
     onSuccess: () => logoutMutation.mutate(null),
   });
   const categoryMutation = useMutateCategory();
+  const isLoginLoading = refreshTokenQuery.isPending;
 
   return {
     signupMutation,
@@ -232,6 +233,7 @@ function useAuth() {
     profileMutation,
     deleteAccountMutation,
     categoryMutation,
+    isLoginLoading,
   };
 }
 
