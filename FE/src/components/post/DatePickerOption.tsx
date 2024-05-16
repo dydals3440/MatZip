@@ -38,6 +38,7 @@ const DatePickerOption = ({
               date={date}
               onDateChange={onChangeDate}
               locale="ko"
+              theme={theme === 'dark' ? 'dark' : 'light'}
             />
           </View>
         </View>

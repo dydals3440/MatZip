@@ -1,4 +1,5 @@
 import DarkModeOption from '@/components/setting/DarkModeOption';
+import MapLegendOption from '@/components/setting/MapLegendOption';
 import SettingItem from '@/components/setting/SettingItem';
 import {colors, settingNavigations} from '@/constants';
 import useAuth from '@/hooks/queries/useAuth';
@@ -19,6 +20,7 @@ const SettingHomeScreen = ({navigation}: SettingHomeScreenProps) => {
   const styles = styling(theme);
   const {logoutMutation} = useAuth();
   const darkModeOption = useModal();
+  const mapLegendOption = useModal();
 
   const handlePressEditProfile = () => {
     navigation.navigate(settingNavigations.EDIT_PROFILE);
@@ -42,6 +44,7 @@ const SettingHomeScreen = ({navigation}: SettingHomeScreenProps) => {
           onPress={handlePressEditCategory}
         />
         <SettingItem title="다크 모드" onPress={darkModeOption.show} />
+        <SettingItem title="범례 표시" onPress={mapLegendOption.show} />
         <View style={styles.space} />
         <SettingItem
           title="로그아웃"
@@ -58,6 +61,10 @@ const SettingHomeScreen = ({navigation}: SettingHomeScreenProps) => {
         <DarkModeOption
           isVisible={darkModeOption.isVisible}
           hideOption={darkModeOption.hide}
+        />
+        <MapLegendOption
+          isVisible={mapLegendOption.isVisible}
+          hideOption={mapLegendOption.hide}
         />
       </ScrollView>
     </SafeAreaView>
