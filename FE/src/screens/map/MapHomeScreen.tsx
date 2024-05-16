@@ -21,7 +21,6 @@ import {MapStackParamList} from '@/navigations/stack/MapStackNavigator';
 import useUserLocation from '@/hooks/useUserLocation';
 
 import usePermission from '@/hooks/usePermission';
-import mapStyle from '@/style/mapStyle';
 import CustomMarker from '@/components/common/CustomMarker';
 import useGetMarkers from '@/hooks/queries/useGetMarkers';
 import MarkerModal from '@/components/map/MarkerModal';
@@ -34,6 +33,9 @@ import {ThemeMode} from '@/types/common';
 import getMapStyle from '@/style/mapStyle';
 import useLegendStorage from '@/hooks/useLegendStorage';
 import MapLegend from '@/components/map/MapLegend';
+import MarkerFilterOption from '@/components/map/MarkerFilterOption';
+
+import useMarkerFilterStorage from '@/hooks/useMarkerFilterStorage';
 
 type Navigation = CompositeNavigationProp<
   StackNavigationProp<MapStackParamList>,
@@ -48,15 +50,17 @@ const MapHomeScreen = () => {
   const {userLocation, isUserLocationError} = useUserLocation();
   const {selectLocation, setSelectLocation} = useLocationStore();
   const [markerId, setMarkerId] = useState<number | null>(null);
-  const {data: markers} = useGetMarkers();
+  const markerFilter = useMarkerFilterStorage();
+  const {data: markers} = useGetMarkers({
+    select: markerFilter.transformFilteredMarker,
+  });
   const {mapRef, moveMapView, handleChangeDelta} = useMoveMapView();
   const {moveLocation} = useLocationStore();
   const markerModal = useModal();
+  const filterOption = useModal();
   const legend = useLegendStorage();
 
   usePermission('LOCATION');
-
-  console.log(moveLocation, 'moveLocation');
 
   const handlePressMarker = (id: number, coordinate: LatLng) => {
     moveMapView(coordinate);
@@ -149,6 +153,15 @@ const MapHomeScreen = () => {
         <Pressable style={styles.mapButton} onPress={handlePressSearch}>
           <Ionicons name="search" color={colors[theme].WHITE} size={25} />
         </Pressable>
+
+        <Pressable style={styles.mapButton} onPress={filterOption.show}>
+          <Ionicons
+            name="options-outline"
+            color={colors[theme].WHITE}
+            size={25}
+          />
+        </Pressable>
+
         <Pressable style={styles.mapButton} onPress={handlePressUserLocation}>
           <MaterialIcons
             name="my-location"
@@ -162,6 +175,11 @@ const MapHomeScreen = () => {
         markerId={markerId}
         isVisible={markerModal.isVisible}
         hide={markerModal.hide}
+      />
+
+      <MarkerFilterOption
+        isVisible={filterOption.isVisible}
+        hideOption={filterOption.hide}
       />
       {legend.isVisible && <MapLegend />}
     </>
