@@ -1,10 +1,10 @@
-import {colorHex, colors} from '@/constants';
-import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
-import {MarkerColor} from '@/types/domain';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {LatLng, MyMapMarkerProps, Marker} from 'react-native-maps';
+import {LatLng, Marker, MyMapMarkerProps} from 'react-native-maps';
+
+import {colorHex, colors} from '@/constants';
+import {MarkerColor, ThemeMode} from '@/types';
+import useThemeStore from '@/store/useThemeStore';
 
 interface CustomMarkerProps extends MyMapMarkerProps {
   coordinate?: LatLng;
@@ -12,12 +12,12 @@ interface CustomMarkerProps extends MyMapMarkerProps {
   score?: number;
 }
 
-const CustomMarker = ({
+function CustomMarker({
   coordinate,
   color,
   score = 5,
   ...props
-}: CustomMarkerProps) => {
+}: CustomMarkerProps) {
   const {theme} = useThemeStore();
   const styles = styling(theme);
 
@@ -40,7 +40,7 @@ const CustomMarker = ({
   ) : (
     markerView
   );
-};
+}
 
 const styling = (theme: ThemeMode) =>
   StyleSheet.create({

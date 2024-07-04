@@ -1,8 +1,8 @@
+import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {colors, mapNavigations} from '@/constants';
-
 import MapHomeScreen from '@/screens/map/MapHomeScreen';
+import {colors, mapNavigations} from '@/constants';
 import AddPostScreen from '@/screens/map/AddPostScreen';
 import {LatLng} from 'react-native-maps';
 import SearchLocationScreen from '@/screens/map/SearchLocationScreen';
@@ -18,6 +18,7 @@ const Stack = createStackNavigator<MapStackParamList>();
 
 function MapStackNavigator() {
   const {theme} = useThemeStore();
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -25,8 +26,8 @@ function MapStackNavigator() {
           backgroundColor: colors[theme].WHITE,
         },
         headerStyle: {
-          backgroundColor: colors[theme].WHITE,
           shadowColor: colors[theme].GRAY_200,
+          backgroundColor: colors[theme].WHITE,
         },
         headerTitleStyle: {
           fontSize: 15,

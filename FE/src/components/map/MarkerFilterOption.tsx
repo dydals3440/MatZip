@@ -1,9 +1,10 @@
+import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {CompoundOption} from '../common/CompoundOption';
-import {useState} from 'react';
-import {MarkerColor} from '@/types/domain';
+
 import useAuth from '@/hooks/queries/useAuth';
 import {colorHex} from '@/constants';
+import {MarkerColor} from '@/types';
+import {CompoundOption} from '../common/CompoundOption';
 import useMarkerFilterStorage from '@/hooks/useMarkerFilterStorage';
 
 interface MarkerFilterOptionProps {
@@ -21,13 +22,10 @@ const categoryList: MarkerColor[] = [
 
 const scoreList = ['1', '2', '3', '4', '5'];
 
-const MarkerFilterOption = ({
-  isVisible,
-  hideOption,
-}: MarkerFilterOptionProps) => {
-  const [filterCondition, setFilterCondition] = useState('색상');
+function MarkerFilterOption({isVisible, hideOption}: MarkerFilterOptionProps) {
   const {getProfileQuery} = useAuth();
   const {categories} = getProfileQuery.data || {};
+  const [filterCondition, setFilterCondition] = useState('색상');
   const markerFilter = useMarkerFilterStorage();
 
   const handleCondition = (condition: string) => {
@@ -40,11 +38,16 @@ const MarkerFilterOption = ({
       [name]: !markerFilter.items[name],
     });
   };
+
   return (
-    <CompoundOption isVisible={isVisible} hideOption={hideOption}>
+    <CompoundOption
+      isVisible={isVisible}
+      hideOption={hideOption}
+      animationType="fade">
       <CompoundOption.Background>
         <CompoundOption.Container>
           <CompoundOption.Title>마커 필터링</CompoundOption.Title>
+
           <CompoundOption.Divider />
           <View style={styles.filterContainer}>
             {['색상', '평점'].map(condition => (
@@ -78,36 +81,38 @@ const MarkerFilterOption = ({
               ))}
             </>
           )}
-
           {filterCondition === '평점' && (
             <>
-              {['1', '2', '3', '4', '5'].map(score => (
+              {scoreList.map(score => (
                 <CompoundOption.CheckBox
                   key={score}
                   isChecked={markerFilter.items[score]}
                   onPress={() => handleFilter(score)}>
-                  {score} 점
+                  {score}점
                 </CompoundOption.CheckBox>
               ))}
             </>
           )}
+          <CompoundOption.Divider />
+          <CompoundOption.Button onPress={hideOption}>
+            완료
+          </CompoundOption.Button>
         </CompoundOption.Container>
-        <CompoundOption.Button onPress={hideOption}>완료</CompoundOption.Button>
       </CompoundOption.Background>
     </CompoundOption>
   );
-};
+}
 
 const styles = StyleSheet.create({
   filterContainer: {
     flexDirection: 'row',
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
     justifyContent: 'space-around',
   },
   marker: {
     width: 20,
     height: 20,
-    borderRadius: 20,
+    borderRadius: 10,
   },
 });
 

@@ -1,6 +1,3 @@
-import {colors} from '@/constants';
-import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
 import {PropsWithChildren, ReactNode, createContext, useContext} from 'react';
 import {
   GestureResponderEvent,
@@ -15,6 +12,10 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
+import {colors} from '@/constants';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types';
 
 interface OptionContextValue {
   onClickOutSide?: (event: GestureResponderEvent) => void;
@@ -34,18 +35,21 @@ function OptionMain({
   isVisible,
   hideOption,
   animationType = 'slide',
+  ...props
 }: OptionMainProps) {
   const onClickOutSide = (event: GestureResponderEvent) => {
     if (event.target === event.currentTarget) {
       hideOption();
     }
   };
+
   return (
     <Modal
       visible={isVisible}
       transparent={true}
       animationType={animationType}
-      onRequestClose={hideOption}>
+      onRequestClose={hideOption}
+      {...props}>
       <OptionContext.Provider value={{onClickOutSide}}>
         {children}
       </OptionContext.Provider>
@@ -99,6 +103,7 @@ function Button({
       <Text style={[styles.optionText, isDanger && styles.dangerText]}>
         {children}
       </Text>
+
       {isChecked && (
         <Ionicons name="checkmark" size={20} color={colors[theme].BLUE_500} />
       )}
@@ -106,7 +111,6 @@ function Button({
   );
 }
 
-// children 밖에 없어서 타입을 propswhitchildren
 function Title({children}: PropsWithChildren) {
   const {theme} = useThemeStore();
   const styles = styling(theme);
@@ -139,6 +143,7 @@ function CheckBox({
 }: CheckBoxProps) {
   const {theme} = useThemeStore();
   const styles = styling(theme);
+
   return (
     <Pressable
       style={({pressed}) => [
@@ -168,7 +173,8 @@ function Filter({children, isSelected, ...props}: FilterProps) {
 
   return (
     <Pressable style={styles.filterContainer} {...props}>
-      <Text style={isSelected ? styles.filterSelectedText : styles.filterText}>
+      <Text
+        style={[isSelected ? styles.filterSelectedText : styles.filterText]}>
         {children}
       </Text>
       <MaterialIcons
@@ -180,13 +186,12 @@ function Filter({children, isSelected, ...props}: FilterProps) {
   );
 }
 
-// 컴포넌트를 하나로 묶어서 export
 export const CompoundOption = Object.assign(OptionMain, {
   Container,
+  Background,
   Button,
   Title,
   Divider,
-  Background,
   CheckBox,
   Filter,
 });

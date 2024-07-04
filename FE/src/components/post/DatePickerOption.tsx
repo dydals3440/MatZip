@@ -1,16 +1,16 @@
-import {colors} from '@/constants';
-import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
 import React from 'react';
 import {
-  StyleSheet,
-  View,
   Modal,
-  SafeAreaView,
   Pressable,
+  SafeAreaView,
+  StyleSheet,
   Text,
+  View,
 } from 'react-native';
 import DatePicker from 'react-native-date-picker';
+import {colors} from '@/constants';
+import {ThemeMode} from '@/types';
+import useThemeStore from '@/store/useThemeStore';
 
 interface DatePickerOptionProps {
   isVisible: boolean;
@@ -19,26 +19,26 @@ interface DatePickerOptionProps {
   onConfirmDate: () => void;
 }
 
-const DatePickerOption = ({
+function DatePickerOption({
   isVisible,
   date,
   onChangeDate,
   onConfirmDate,
-}: DatePickerOptionProps) => {
+}: DatePickerOptionProps) {
   const {theme} = useThemeStore();
   const styles = styling(theme);
 
   return (
-    <Modal visible={isVisible} transparent animationType="slide">
-      <SafeAreaView style={styles.optionBackground}>
+    <Modal visible={isVisible} transparent={true} animationType={'slide'}>
+      <SafeAreaView style={[styles.optionBackground, styles.dimmed]}>
         <View style={styles.optionContainer}>
           <View style={styles.pickerContainer}>
             <DatePicker
               mode="date"
+              textColor={colors[theme].BLACK}
               date={date}
               onDateChange={onChangeDate}
               locale="ko"
-              theme={theme === 'dark' ? 'dark' : 'light'}
             />
           </View>
         </View>
@@ -50,7 +50,7 @@ const DatePickerOption = ({
       </SafeAreaView>
     </Modal>
   );
-};
+}
 
 const styling = (theme: ThemeMode) =>
   StyleSheet.create({
@@ -60,7 +60,9 @@ const styling = (theme: ThemeMode) =>
     optionBackground: {
       flex: 1,
       justifyContent: 'flex-end',
-      backgroundColor: 'rgba(0, 0, 0 / 0.5)',
+    },
+    dimmed: {
+      backgroundColor: 'rgba(0 0 0 / 0.5)',
     },
     optionContainer: {
       borderRadius: 15,
@@ -77,8 +79,8 @@ const styling = (theme: ThemeMode) =>
       gap: 5,
     },
     optionText: {
-      color: colors[theme].BLUE_500,
       fontSize: 17,
+      color: colors[theme].BLUE_500,
       fontWeight: '500',
     },
   });

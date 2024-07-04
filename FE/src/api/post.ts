@@ -1,4 +1,4 @@
-import {ImageUri, Post} from '@/types/domain';
+import {ImageUri, Post} from '@/types';
 import axiosInstance from './axios';
 
 type ResponsePost = Post & {images: ImageUri[]};
@@ -9,7 +9,6 @@ const getPosts = async (page = 1): Promise<ResponsePost[]> => {
   return data;
 };
 
-// Post를 생성할 떄 id는 필요하지 않다. (Auto Increment이기 때문)
 type RequestCreatePost = Omit<Post, 'id'> & {imageUris: ImageUri[]};
 
 const createPost = async (body: RequestCreatePost): Promise<ResponsePost> => {
@@ -61,12 +60,13 @@ const updateFavoritePost = async (id: number): Promise<number> => {
 };
 
 const getSearchPosts = async (
-  query: string,
   page = 1,
+  query: string,
 ): Promise<ResponsePost[]> => {
   const {data} = await axiosInstance.get(
     `/posts/my/search?query=${query}&page=${page}`,
   );
+
   return data;
 };
 
@@ -76,7 +76,6 @@ type CalendarPost = {
   address: string;
 };
 
-// 1일에 해당하는 장소정보, 2일에 해당하는 장소정보 이런식으로 옴.
 type ResponseCalendarPost = Record<number, CalendarPost[]>;
 
 const getCalendarPosts = async (
@@ -89,20 +88,20 @@ const getCalendarPosts = async (
 };
 
 export {
-  getPosts,
   createPost,
   getPost,
+  getPosts,
   deletePost,
   updatePost,
-  getFavoritePosts,
   updateFavoritePost,
+  getFavoritePosts,
   getSearchPosts,
   getCalendarPosts,
 };
 export type {
   ResponsePost,
-  ResponseSinglePost,
   RequestCreatePost,
+  ResponseSinglePost,
   RequestUpdatePost,
   CalendarPost,
   ResponseCalendarPost,

@@ -5,19 +5,17 @@ const mainNavigations = {
   SETTING: 'Setting',
 } as const;
 
-// as const로 선언하면 readonly로 만듬
 const authNavigations = {
   AUTH_HOME: 'AuthHome',
   LOGIN: 'Login',
   SIGNUP: 'Signup',
-  KAKAO: 'kakao',
+  KAKAO: 'Kakao',
 } as const;
 
 const mapNavigations = {
   MAP_HOME: 'MapHome',
   ADD_POST: 'AddPost',
   SEARCH_LOCATION: 'SearchLocation',
-  SETTING: 'Setting',
 } as const;
 
 const feedNavigations = {
@@ -30,6 +28,7 @@ const feedNavigations = {
 const feedTabNavigations = {
   FEED_HOME: 'FeedTabHome',
   FEED_FAVORITE: 'FeedFavorite',
+  FEED_SEARCH: 'FeedSearch',
 } as const;
 
 const settingNavigations = {

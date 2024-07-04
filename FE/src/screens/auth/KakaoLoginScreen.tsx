@@ -1,5 +1,7 @@
 import {colors} from '@/constants';
 import useAuth from '@/hooks/queries/useAuth';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types';
 import axios from 'axios';
 import React, {useState} from 'react';
 import {
@@ -16,26 +18,25 @@ import WebView, {
   WebViewNavigation,
 } from 'react-native-webview';
 
-interface KakaoLoginScreenProps {}
-
 const REDIRECT_URI = `${
-  Platform.OS === 'ios' ? `http://localhost:3030` : 'http://10.0.2.2:3030/'
-}/auth/oauth/kakao`;
+  Platform.OS === 'ios' ? 'http://localhost:3030/' : 'http://10.0.2.2:3030/'
+}auth/oauth/kakao`;
 
-function KakaoLoginScreen({}: KakaoLoginScreenProps) {
+function KakaoLoginScreen() {
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
   const {kakaoLoginMutation} = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [isChangeNavigate, setIsChangeNavigate] = useState(true);
 
   const handleOnMessage = (event: WebViewMessageEvent) => {
-    console.log(event.nativeEvent.url);
     if (event.nativeEvent.url.includes(`${REDIRECT_URI}?code=`)) {
-      // 나머지 부분이 코드에 담기게됨.
       const code = event.nativeEvent.url.replace(`${REDIRECT_URI}?code=`, '');
-      // 코드를 보내주면됨
+
       requestToken(code);
     }
   };
+
   const requestToken = async (code: string) => {
     const response = await axios({
       method: 'post',
@@ -50,12 +51,10 @@ function KakaoLoginScreen({}: KakaoLoginScreenProps) {
 
     kakaoLoginMutation.mutate(response.data.access_token);
   };
-  // 로그인 => 코드 생김 => 이 코드를 백엔드에서 받음
 
   const handleNavigationChangeState = (event: WebViewNavigation) => {
     const isMatched = event.url.includes(`${REDIRECT_URI}?code=`);
     setIsLoading(isMatched);
-    console.log(event.loading);
     setIsChangeNavigate(event.loading);
   };
 
@@ -63,7 +62,7 @@ function KakaoLoginScreen({}: KakaoLoginScreenProps) {
     <SafeAreaView style={styles.container}>
       {(isLoading || isChangeNavigate) && (
         <View style={styles.kakaoLoadingContainer}>
-          <ActivityIndicator size={'small'} color={colors.BLACK} />
+          <ActivityIndicator size={'small'} color={colors[theme].BLACK} />
         </View>
       )}
       <WebView
@@ -78,17 +77,18 @@ function KakaoLoginScreen({}: KakaoLoginScreenProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  kakaoLoadingContainer: {
-    backgroundColor: colors.WHITE,
-    height: Dimensions.get('window').height,
-    paddingBottom: 100,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    kakaoLoadingContainer: {
+      backgroundColor: colors[theme].WHITE,
+      height: Dimensions.get('window').height,
+      paddingBottom: 100,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  });
 
 export default KakaoLoginScreen;

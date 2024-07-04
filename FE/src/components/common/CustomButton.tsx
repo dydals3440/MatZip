@@ -10,9 +10,10 @@ import {
   ViewStyle,
   TextStyle,
 } from 'react-native';
-import {colors} from '../../constants';
+
+import {colors} from '@/constants';
 import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
+import {ThemeMode} from '@/types';
 
 interface CustomButtonProps extends PressableProps {
   label: string;
@@ -38,16 +39,12 @@ function CustomButton({
 }: CustomButtonProps) {
   const {theme} = useThemeStore();
   const styles = styling(theme);
-  //   // 안드로이드에서 screen이 다름.
-  //   console.log('screen', Dimensions.get('screen').height);
-  //   // 안드로이드는 상태 표시줄까지 포함해버림.
-  //   console.log('window', Dimensions.get('window').height);
+
   return (
     <Pressable
       disabled={inValid}
       style={({pressed}) => [
         styles.container,
-
         pressed ? styles[`${variant}Pressed`] : styles[variant],
         inValid && styles.inValid,
         style,
@@ -67,8 +64,8 @@ const styling = (theme: ThemeMode) =>
   StyleSheet.create({
     container: {
       borderRadius: 3,
-      justifyContent: 'center',
       flexDirection: 'row',
+      justifyContent: 'center',
     },
     inValid: {
       opacity: 0.5,
@@ -92,16 +89,16 @@ const styling = (theme: ThemeMode) =>
       width: '100%',
       paddingVertical: deviceHeight > 700 ? 15 : 10,
       alignItems: 'center',
-      justifyContent: 'center',
       flexDirection: 'row',
+      justifyContent: 'center',
       gap: 5,
     },
     medium: {
       width: '50%',
       paddingVertical: deviceHeight > 700 ? 12 : 8,
       alignItems: 'center',
-      justifyContent: 'center',
       flexDirection: 'row',
+      justifyContent: 'center',
       gap: 5,
     },
     text: {

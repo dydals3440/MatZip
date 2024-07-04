@@ -13,27 +13,26 @@ import {colors, feedNavigations} from '@/constants';
 import {getDateWithSeparator} from '@/utils';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {FeedStackParamlist} from '@/navigations/stack/FeedStackNavigator';
+import {FeedStackParamList} from '@/navigations/stack/FeedStackNavigator';
 import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
+import {ThemeMode} from '@/types';
 
 interface FeedItemProps {
   post: ResponsePost;
 }
 
-type Navigation = StackNavigationProp<FeedStackParamlist>;
-
-const FeedItem = ({post}: FeedItemProps) => {
+function FeedItem({post}: FeedItemProps) {
   const {theme} = useThemeStore();
   const styles = styling(theme);
 
-  const navigation = useNavigation<Navigation>();
+  const navigation = useNavigation<StackNavigationProp<FeedStackParamList>>();
 
-  const handlePressedFeed = () => {
+  const handlePressFeed = () => {
     navigation.navigate(feedNavigations.FEED_DETAIL, {id: post.id});
   };
+
   return (
-    <Pressable style={styles.container} onPress={handlePressedFeed}>
+    <Pressable style={styles.container} onPress={handlePressFeed}>
       <View>
         {post.images.length > 0 && (
           <View key={post.id} style={styles.imageContainer}>
@@ -55,6 +54,7 @@ const FeedItem = ({post}: FeedItemProps) => {
             <Text style={styles.descriptionText}>No Image</Text>
           </View>
         )}
+
         <View style={styles.textContainer}>
           <Text style={styles.dateText}>
             {getDateWithSeparator(post.date, '/')}
@@ -67,7 +67,7 @@ const FeedItem = ({post}: FeedItemProps) => {
       </View>
     </Pressable>
   );
-};
+}
 
 const styling = (theme: ThemeMode) =>
   StyleSheet.create({
@@ -107,8 +107,7 @@ const styling = (theme: ThemeMode) =>
       fontSize: 13,
     },
     descriptionText: {
-      color: colors[theme].BLACK,
-      fontWeight: '500',
+      color: colors[theme].GRAY_500,
       fontSize: 13,
     },
   });

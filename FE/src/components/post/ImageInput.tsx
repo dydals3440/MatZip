@@ -1,10 +1,10 @@
+import React from 'react';
+import {Pressable, StyleSheet, Text} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 import {colors} from '@/constants';
 import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
-import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {Pressable} from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import {ThemeMode} from '@/types';
 
 interface ImageInputProps {
   onChange: () => void;
@@ -13,6 +13,7 @@ interface ImageInputProps {
 function ImageInput({onChange}: ImageInputProps) {
   const {theme} = useThemeStore();
   const styles = styling(theme);
+
   return (
     <Pressable
       style={({pressed}) => [

@@ -1,4 +1,3 @@
-import {colors} from '@/constants';
 import React, {PropsWithChildren} from 'react';
 import {
   ActivityIndicator,
@@ -7,12 +6,14 @@ import {
   View,
 } from 'react-native';
 
-const Loader = ({
+import {colors} from '@/constants';
+
+function Loader({
   children,
   size = 'small',
   color = colors.light.GRAY_500,
   ...props
-}: PropsWithChildren<ActivityIndicatorProps>) => {
+}: PropsWithChildren<ActivityIndicatorProps>) {
   return (
     <View style={styles.container}>
       <ActivityIndicator
@@ -24,7 +25,7 @@ const Loader = ({
       {children}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

@@ -1,28 +1,27 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
+import {LatLng} from 'react-native-maps';
 
 import {colors, feedNavigations} from '@/constants';
-
 import FeedHomeScreen from '@/screens/feed/FeedHomeScreen';
-import FeedHomeHeaderLeft from '@/components/feed/FeedHomeHeaderLeft';
 import FeedDetailScreen from '@/screens/feed/FeedDetailScreen';
-import {LatLng} from 'react-native-maps';
 import EditPostScreen from '@/screens/feed/EditPostScreen';
-
-import useThemeStore from '@/store/useThemeStore';
 import ImageZoomScreen from '@/screens/feed/ImageZoomScreen';
+import FeedHomeHeaderLeft from '@/components/feed/FeedHomeHeaderLeft';
+import useThemeStore from '@/store/useThemeStore';
 
-export type FeedStackParamlist = {
+export type FeedStackParamList = {
   [feedNavigations.FEED_HOME]: undefined;
   [feedNavigations.FEED_DETAIL]: {id: number};
   [feedNavigations.EDIT_POST]: {location: LatLng};
   [feedNavigations.IMAGE_ZOOM]: {index: number};
 };
 
-const Stack = createStackNavigator<FeedStackParamlist>();
+const Stack = createStackNavigator<FeedStackParamList>();
 
 function FeedStackNavigator() {
   const {theme} = useThemeStore();
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -30,8 +29,8 @@ function FeedStackNavigator() {
           backgroundColor: colors[theme].WHITE,
         },
         headerStyle: {
-          backgroundColor: colors[theme].WHITE,
           shadowColor: colors[theme].GRAY_200,
+          backgroundColor: colors[theme].WHITE,
         },
         headerTitleStyle: {
           fontSize: 15,

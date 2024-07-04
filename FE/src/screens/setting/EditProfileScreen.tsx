@@ -6,33 +6,38 @@ import useAuth from '@/hooks/queries/useAuth';
 import useForm from '@/hooks/useForm';
 import useImagePicker from '@/hooks/useImagePicker';
 import useModal from '@/hooks/useModal';
-import useThemeStorage from '@/hooks/useThemeStorage';
-import {SettingStackParamlist} from '@/navigations/stack/SettingStackNavigator';
+import {SettingStackParamList} from '@/navigations/stack/SettingStackNavigator';
 import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
+import {ThemeMode} from '@/types';
 import {validateEditProfile} from '@/utils';
 import {StackScreenProps} from '@react-navigation/stack';
 import React, {useEffect} from 'react';
-import {Image, Keyboard, Platform, Text} from 'react-native';
-import {Pressable, StyleSheet, View} from 'react-native';
+import {
+  Image,
+  Keyboard,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import Toast from 'react-native-toast-message';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-type EditProfileScreenProps = StackScreenProps<SettingStackParamlist>;
+type EditProfileScreenProps = StackScreenProps<SettingStackParamList>;
 
-const EditProfileScreen = ({navigation}: EditProfileScreenProps) => {
+function EditProfileScreen({navigation}: EditProfileScreenProps) {
   const {theme} = useThemeStore();
   const styles = styling(theme);
   const {getProfileQuery, profileMutation} = useAuth();
   const {nickname, imageUri, kakaoImageUri} = getProfileQuery.data || {};
-  const imageOption = useModal();
 
+  const imageOption = useModal();
   const imagePicker = useImagePicker({
     initialImages: imageUri ? [{uri: imageUri}] : [],
     mode: 'single',
     onSettled: imageOption.hide,
   });
-
   const editProfile = useForm({
     initialValue: {nickname: nickname ?? ''},
     validate: validateEditProfile,
@@ -117,6 +122,7 @@ const EditProfileScreen = ({navigation}: EditProfileScreenProps) => {
           )}
         </Pressable>
       </View>
+
       <InputField
         {...editProfile.getTextInputProps('nickname')}
         error={editProfile.errors.nickname}
@@ -133,7 +139,6 @@ const EditProfileScreen = ({navigation}: EditProfileScreenProps) => {
         />
         <Text style={styles.deleteAccountText}>회원탈퇴</Text>
       </Pressable>
-
       <EditProfileImageOption
         isVisible={imageOption.isVisible}
         hideOption={imageOption.hide}
@@ -141,7 +146,7 @@ const EditProfileScreen = ({navigation}: EditProfileScreenProps) => {
       />
     </View>
   );
-};
+}
 
 const styling = (theme: ThemeMode) =>
   StyleSheet.create({
@@ -174,11 +179,11 @@ const styling = (theme: ThemeMode) =>
     deleteAccountContainer: {
       position: 'absolute',
       flexDirection: 'row',
-      justifyContent: 'center',
       alignItems: 'center',
+      justifyContent: 'center',
       gap: 5,
-      bottom: 70,
       right: 20,
+      bottom: 70,
       backgroundColor: colors[theme].GRAY_100,
       borderRadius: 10,
       padding: 10,

@@ -1,9 +1,10 @@
-import {colors} from '@/constants';
-import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
-import Slider from '@react-native-community/slider';
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import Slider from '@react-native-community/slider';
+
+import {colors} from '@/constants';
+import {ThemeMode} from '@/types';
+import useThemeStore from '@/store/useThemeStore';
 
 interface ScoreInputProps {
   score: number;
@@ -17,8 +18,8 @@ function ScoreInput({score, onChangeScore}: ScoreInputProps) {
   return (
     <View style={styles.container}>
       <View style={styles.labelContainer}>
-        <Text style={styles.labelText}>{score}점</Text>
         <Text style={styles.labelText}>평점</Text>
+        <Text style={styles.labelText}>{score}점</Text>
       </View>
       <Slider
         value={score}

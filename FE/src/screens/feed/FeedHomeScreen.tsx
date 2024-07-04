@@ -1,12 +1,10 @@
+import React, {Suspense} from 'react';
+import {SafeAreaView, StyleSheet} from 'react-native';
+import FeedList from '@/components/feed/FeedList';
 import Loader from '@/components/common/Loader';
 import RetryErrorBoundary from '@/components/common/RetryErrorBoundary';
-import FeedList from '@/components/feed/FeedList';
-import React, {Suspense} from 'react';
-import {StyleSheet, View, Text, SafeAreaView} from 'react-native';
 
-interface FeedHomeScreenProps {}
-
-function FeedHomeScreen({}: FeedHomeScreenProps) {
+function FeedHomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <RetryErrorBoundary>

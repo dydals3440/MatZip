@@ -1,19 +1,18 @@
 import React, {useRef} from 'react';
-import {SafeAreaView, StyleSheet, Text, TextInput, View} from 'react-native';
-import useForm from '@/hooks/useForm';
+import {SafeAreaView, StyleSheet, TextInput, View} from 'react-native';
+import Toast from 'react-native-toast-message';
+
 import InputField from '@/components/common/InputField';
 import CustomButton from '@/components/common/CustomButton';
-import {validateSignup} from '@/utils';
+import useForm from '@/hooks/useForm';
 import useAuth from '@/hooks/queries/useAuth';
-import Toast from 'react-native-toast-message';
+import {validateSignup} from '@/utils';
 import {errorMessages} from '@/constants';
 
-interface SignUpScreenProps {}
-
-const SignUpScreen = ({}: SignUpScreenProps) => {
+function SignupScreen() {
+  const {signupMutation, loginMutation} = useAuth();
   const passwordRef = useRef<TextInput | null>(null);
   const passwordConfirmRef = useRef<TextInput | null>(null);
-  const {signupMutation, loginMutation} = useAuth();
   const signup = useForm({
     initialValue: {email: '', password: '', passwordConfirm: ''},
     validate: validateSignup,
@@ -21,16 +20,19 @@ const SignUpScreen = ({}: SignUpScreenProps) => {
 
   const handleSubmit = () => {
     const {email, password} = signup.values;
-    signupMutation.mutate(signup.values, {
-      onSuccess: () => loginMutation.mutate({email, password}),
-      onError: error =>
-        Toast.show({
-          type: 'error',
-          text1: error.response?.data.message || errorMessages.UNEXPECT_ERROR,
-          position: 'bottom',
-          visibilityTime: 2000,
-        }),
-    });
+    signupMutation.mutate(
+      {email, password},
+      {
+        onSuccess: () => loginMutation.mutate({email, password}),
+        onError: error =>
+          Toast.show({
+            type: 'error',
+            text1: error.response?.data.message || errorMessages.UNEXPECT_ERROR,
+            position: 'bottom',
+            visibilityTime: 2000,
+          }),
+      },
+    );
   };
 
   return (
@@ -42,9 +44,7 @@ const SignUpScreen = ({}: SignUpScreenProps) => {
           error={signup.errors.email}
           touched={signup.touched.email}
           inputMode="email"
-          // 다음 Input으로 넘어갈 수 있는 key 생성.
           returnKeyType="next"
-          // next버튼 누르면 닫히는데, 이럼 안닫힘.
           blurOnSubmit={false}
           onSubmitEditing={() => passwordRef.current?.focus()}
           {...signup.getTextInputProps('email')}
@@ -52,14 +52,13 @@ const SignUpScreen = ({}: SignUpScreenProps) => {
         <InputField
           ref={passwordRef}
           placeholder="비밀번호"
-          // Automatic strong password 인풋에 차는 문제 해결
           textContentType="oneTimeCode"
           error={signup.errors.password}
           touched={signup.touched.password}
-          returnKeyType="next"
-          onSubmitEditing={() => passwordConfirmRef.current?.focus()}
-          // 비밀번호 masking 처리.
           secureTextEntry
+          returnKeyType="next"
+          blurOnSubmit={false}
+          onSubmitEditing={() => passwordConfirmRef.current?.focus()}
           {...signup.getTextInputProps('password')}
         />
         <InputField
@@ -68,7 +67,7 @@ const SignUpScreen = ({}: SignUpScreenProps) => {
           error={signup.errors.passwordConfirm}
           touched={signup.touched.passwordConfirm}
           secureTextEntry
-          // 다 하면 제출되게 마지막이니.
+          returnKeyType="join"
           onSubmitEditing={handleSubmit}
           {...signup.getTextInputProps('passwordConfirm')}
         />
@@ -76,7 +75,7 @@ const SignUpScreen = ({}: SignUpScreenProps) => {
       <CustomButton label="회원가입" onPress={handleSubmit} />
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -89,4 +88,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUpScreen;
+export default SignupScreen;

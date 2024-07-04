@@ -3,14 +3,12 @@ import EditCategoryHeaderRight from '@/components/setting/EditCategoryHeaderRigh
 import {colorHex, colors, errorMessages} from '@/constants';
 import useAuth from '@/hooks/queries/useAuth';
 import useForm from '@/hooks/useForm';
-import useThemeStorage from '@/hooks/useThemeStorage';
-import {SettingStackParamlist} from '@/navigations/stack/SettingStackNavigator';
+import {SettingStackParamList} from '@/navigations/stack/SettingStackNavigator';
 import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
-import {MarkerColor} from '@/types/domain';
+import {MarkerColor, ThemeMode} from '@/types';
 import {validateCategory} from '@/utils';
 import {StackScreenProps} from '@react-navigation/stack';
-import {useEffect, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -37,9 +35,9 @@ const categoryPlaceholderList = [
   'ex) 여행',
 ];
 
-type EditCategoryScreenProps = StackScreenProps<SettingStackParamlist>;
+type EditCategoryScreenProps = StackScreenProps<SettingStackParamList>;
 
-const EditCategoryScreen = ({navigation}: EditCategoryScreenProps) => {
+function EditCategoryScreen({navigation}: EditCategoryScreenProps) {
   const {theme} = useThemeStore();
   const styles = styling(theme);
   const refArray = useRef<(TextInput | null)[]>([]);
@@ -89,9 +87,10 @@ const EditCategoryScreen = ({navigation}: EditCategoryScreenProps) => {
             마커 색상의 카테고리를 설정해주세요.
           </Text>
           <Text style={styles.infoText}>
-            마커 필터링, 범례 표시에 사용할 수 있습니다.
+            마커 필터링, 범례 표시에 사용할 수 있어요.
           </Text>
         </View>
+
         <View style={styles.formContainer}>
           {categoryList.map((color, i) => {
             return (
@@ -105,7 +104,6 @@ const EditCategoryScreen = ({navigation}: EditCategoryScreenProps) => {
                     error={category.errors[color]}
                     touched={category.touched[color]}
                     placeholder={categoryPlaceholderList[i]}
-                    // 리턴키를 누르면, 다음 항목으로 이동하도록 ref 사용
                     ref={el => (refArray.current[i] = el)}
                     autoFocus={color === 'RED'}
                     maxLength={10}
@@ -123,7 +121,7 @@ const EditCategoryScreen = ({navigation}: EditCategoryScreenProps) => {
       </ScrollView>
     </SafeAreaView>
   );
-};
+}
 
 const styling = (theme: ThemeMode) =>
   StyleSheet.create({

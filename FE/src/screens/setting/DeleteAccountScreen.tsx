@@ -1,19 +1,18 @@
 import CustomButton from '@/components/common/CustomButton';
 import {alerts, colors, errorMessages} from '@/constants';
 import useAuth from '@/hooks/queries/useAuth';
-import useThemeStorage from '@/hooks/useThemeStorage';
 import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
+import {ThemeMode} from '@/types';
 import React from 'react';
-import {Alert, StyleSheet, Text, View} from 'react-native';
+import {Alert, Text} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import Toast from 'react-native-toast-message';
 
-interface DeleteAccountScreenProps {}
-
-const DeleteAccountScreen = ({}: DeleteAccountScreenProps) => {
+function DeleteAccountScreen() {
   const {theme} = useThemeStore();
   const styles = styling(theme);
   const {deleteAccountMutation} = useAuth();
+
   const handlePressDeleteAccount = () => {
     Alert.alert(
       alerts.DELETE_ACCOUNT.TITLE,
@@ -21,7 +20,7 @@ const DeleteAccountScreen = ({}: DeleteAccountScreenProps) => {
       [
         {
           text: '탈퇴',
-          onPress: () => {
+          onPress: () =>
             deleteAccountMutation.mutate(null, {
               onSuccess: () =>
                 Toast.show({
@@ -37,8 +36,7 @@ const DeleteAccountScreen = ({}: DeleteAccountScreenProps) => {
                     errorMessages.UNEXPECT_ERROR,
                   position: 'bottom',
                 }),
-            });
-          },
+            }),
           style: 'destructive',
         },
         {
@@ -48,6 +46,7 @@ const DeleteAccountScreen = ({}: DeleteAccountScreenProps) => {
       ],
     );
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.infoContainer}>
@@ -58,10 +57,11 @@ const DeleteAccountScreen = ({}: DeleteAccountScreenProps) => {
           저장된 장소가 남아있다면 삭제해주세요.
         </Text>
       </View>
+
       <CustomButton label="회원탈퇴" onPress={handlePressDeleteAccount} />
     </View>
   );
-};
+}
 
 const styling = (theme: ThemeMode) =>
   StyleSheet.create({
@@ -76,8 +76,8 @@ const styling = (theme: ThemeMode) =>
       marginBottom: 30,
       borderWidth: 1,
       borderColor: colors[theme].PINK_700,
-      padding: 10,
       borderRadius: 3,
+      padding: 10,
       gap: 10,
     },
     infoText: {

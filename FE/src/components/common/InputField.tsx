@@ -8,10 +8,11 @@ import {
   Text,
   Pressable,
 } from 'react-native';
-import {colors} from '../../constants';
-import {mergeRefs} from '../../utils';
+
+import {mergeRefs} from '@/utils';
+import {colors} from '@/constants';
+import {ThemeMode} from '@/types';
 import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
 
 interface InputFieldProps extends TextInputProps {
   disabled?: boolean;
@@ -24,7 +25,7 @@ const deviceHeight = Dimensions.get('screen').height;
 
 const InputField = forwardRef(
   (
-    {disabled = false, touched, icon = null, error, ...props}: InputFieldProps,
+    {disabled = false, error, touched, icon = null, ...props}: InputFieldProps,
     ref?: ForwardedRef<TextInput>,
   ) => {
     const {theme} = useThemeStore();
@@ -36,7 +37,6 @@ const InputField = forwardRef(
     };
 
     return (
-      // input창 바깥을 눌러도, focus되게 설정.
       <Pressable onPress={handlePressInput}>
         <View
           style={[
@@ -74,11 +74,6 @@ const styling = (theme: ThemeMode) =>
       borderColor: colors[theme].GRAY_200,
       padding: deviceHeight > 700 ? 15 : 10,
     },
-    innerContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 5,
-    },
     multiLine: {
       paddingBottom: deviceHeight > 700 ? 45 : 30,
     },
@@ -86,6 +81,11 @@ const styling = (theme: ThemeMode) =>
       fontSize: 16,
       color: colors[theme].BLACK,
       padding: 0,
+    },
+    innerContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 5,
     },
     disabled: {
       backgroundColor: colors[theme].GRAY_200,

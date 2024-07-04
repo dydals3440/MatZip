@@ -1,13 +1,19 @@
-import {colors, feedNavigations} from '@/constants';
-import {FeedStackParamlist} from '@/navigations/stack/FeedStackNavigator';
-import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
-import {ImageUri} from '@/types/domain';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React from 'react';
-import {Image, Platform, Pressable, StyleSheet, View} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import {
+  Image,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import {ImageUri, ThemeMode} from '@/types';
+import {colors, feedNavigations} from '@/constants';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {FeedStackParamList} from '@/navigations/stack/FeedStackNavigator';
+import useThemeStore from '@/store/useThemeStore';
 
 interface PreviewImageListProps {
   imageUris: ImageUri[];
@@ -17,16 +23,16 @@ interface PreviewImageListProps {
   zoomEnable?: boolean;
 }
 
-const PreviewImageList = ({
+function PreviewImageList({
   imageUris,
   onDelete,
   onChangeOrder,
   showOption = false,
   zoomEnable = false,
-}: PreviewImageListProps) => {
+}: PreviewImageListProps) {
   const {theme} = useThemeStore();
   const styles = styling(theme);
-  const navigation = useNavigation<NavigationProp<FeedStackParamlist>>();
+  const navigation = useNavigation<NavigationProp<FeedStackParamList>>();
 
   const handlePressImage = (index: number) => {
     if (zoomEnable) {
@@ -44,16 +50,15 @@ const PreviewImageList = ({
             <View key={uri} style={styles.imageContainer}>
               <Pressable onPress={() => handlePressImage(index)}>
                 <Image
-                  key={index}
-                  resizeMode="cover"
+                  style={styles.image}
                   source={{
                     uri: `${
                       Platform.OS === 'ios'
-                        ? 'http://localhost:3030'
-                        : 'http://10.0.2.2:3030'
-                    }/${uri}`,
+                        ? 'http://localhost:3030/'
+                        : 'http://10.0.2.2:3030/'
+                    }${uri}`,
                   }}
-                  style={styles.image}
+                  resizeMode="cover"
                 />
                 {showOption && (
                   <>
@@ -61,7 +66,7 @@ const PreviewImageList = ({
                       style={[styles.imageButton, styles.deleteButton]}
                       onPress={() => onDelete && onDelete(uri)}>
                       <Ionicons
-                        name="close"
+                        name={'close'}
                         size={16}
                         color={colors[theme].WHITE}
                       />
@@ -74,13 +79,12 @@ const PreviewImageList = ({
                           onChangeOrder && onChangeOrder(index, index - 1)
                         }>
                         <Ionicons
-                          name="arrow-back-outline"
+                          name={'arrow-back-outline'}
                           size={16}
                           color={colors[theme].WHITE}
                         />
                       </Pressable>
                     )}
-
                     {index < imageUris.length - 1 && (
                       <Pressable
                         style={[styles.imageButton, styles.moveRightButton]}
@@ -88,7 +92,7 @@ const PreviewImageList = ({
                           onChangeOrder && onChangeOrder(index, index + 1)
                         }>
                         <Ionicons
-                          name="arrow-forward-outline"
+                          name={'arrow-forward-outline'}
                           size={16}
                           color={colors[theme].WHITE}
                         />
@@ -103,7 +107,7 @@ const PreviewImageList = ({
       </View>
     </ScrollView>
   );
-};
+}
 
 const styling = (theme: ThemeMode) =>
   StyleSheet.create({

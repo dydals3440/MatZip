@@ -1,22 +1,22 @@
-import {colors} from '@/constants';
-import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
-import {ImageUri} from '@/types/domain';
-import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {
   Dimensions,
-  FlatList,
   Image,
   NativeScrollEvent,
   NativeSyntheticEvent,
   Platform,
   Pressable,
+  FlatList,
   StyleSheet,
   View,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Octicons from 'react-native-vector-icons/Octicons';
+
+import {colors} from '@/constants';
+import type {ImageUri, ThemeMode} from '@/types';
+import useThemeStore from '@/store/useThemeStore';
 
 interface ImageCarouselProps {
   images: ImageUri[];
@@ -25,7 +25,7 @@ interface ImageCarouselProps {
 
 const deviceWidth = Dimensions.get('window').width;
 
-const ImageCarousel = ({images, pressedIndex = 0}: ImageCarouselProps) => {
+function ImageCarousel({images, pressedIndex = 0}: ImageCarouselProps) {
   const {theme} = useThemeStore();
   const styles = styling(theme);
   const insets = useSafeAreaInsets();
@@ -34,9 +34,8 @@ const ImageCarousel = ({images, pressedIndex = 0}: ImageCarouselProps) => {
   const [initialIndex, setInitialIndex] = useState(pressedIndex);
 
   const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    console.log(e.nativeEvent.contentOffset.x);
-    // 절반을 위해 반올림처리
     const newPage = Math.round(e.nativeEvent.contentOffset.x / deviceWidth);
+
     setPage(newPage);
   };
 
@@ -47,6 +46,7 @@ const ImageCarousel = ({images, pressedIndex = 0}: ImageCarouselProps) => {
         onPress={() => navigation.goBack()}>
         <Octicons name="arrow-left" size={30} color={colors[theme].WHITE} />
       </Pressable>
+
       <FlatList
         data={images}
         renderItem={({item}) => (
@@ -57,7 +57,7 @@ const ImageCarousel = ({images, pressedIndex = 0}: ImageCarouselProps) => {
                 uri: `${
                   Platform.OS === 'ios'
                     ? 'http://localhost:3030/'
-                    : 'http://10.10.2.2:3030/'
+                    : 'http://10.0.2.2:3030/'
                 }${item.uri}`,
               }}
               resizeMode="contain"
@@ -70,7 +70,6 @@ const ImageCarousel = ({images, pressedIndex = 0}: ImageCarouselProps) => {
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         initialScrollIndex={initialIndex}
-        // scrollToIndex should be used in conjuction with getItemLayout or onScrollToIndexFailed
         onScrollToIndexFailed={() => {
           setInitialIndex(0);
         }}
@@ -80,6 +79,7 @@ const ImageCarousel = ({images, pressedIndex = 0}: ImageCarouselProps) => {
           index,
         })}
       />
+
       <View style={[styles.pageContainer, {bottom: insets.bottom + 10}]}>
         {Array.from({length: images.length}, (_, index) => (
           <View
@@ -90,7 +90,7 @@ const ImageCarousel = ({images, pressedIndex = 0}: ImageCarouselProps) => {
       </View>
     </View>
   );
-};
+}
 
 const styling = (theme: ThemeMode) =>
   StyleSheet.create({

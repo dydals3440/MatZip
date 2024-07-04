@@ -1,10 +1,11 @@
-import useGetInfinitePosts from '@/hooks/queries/useGetInfinitePosts';
+import React, {useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import FeedItem from './FeedItem';
-import {useState} from 'react';
 import useGetInfiniteFavoritePosts from '@/hooks/queries/useGetInfiniteFavoritePosts';
+import useThemeStore from '@/store/useThemeStore';
 
-const FeedFavoriteList = () => {
+function FeedFavoriteList() {
+  const {theme} = useThemeStore();
   const {
     data: posts,
     fetchNextPage,
@@ -14,8 +15,6 @@ const FeedFavoriteList = () => {
   } = useGetInfiniteFavoritePosts();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // 위로 끌어당겼을 때, true
-  // 새로고침.
   const handleRefresh = async () => {
     setIsRefreshing(true);
     await refetch();
@@ -34,26 +33,21 @@ const FeedFavoriteList = () => {
       renderItem={({item}) => <FeedItem post={item} />}
       keyExtractor={item => String(item.id)}
       numColumns={2}
+      contentContainerStyle={styles.contentContainer}
       ListEmptyComponent={
         <View>
-          <Text style={{textAlign: 'center'}}>
-            즐겨찾기 한 장소가 없습니다.
-          </Text>
+          <Text style={{textAlign: 'center'}}>즐겨찾기한 장소가 없습니다.</Text>
         </View>
       }
-      contentContainerStyle={styles.contentContainer}
       onEndReached={handleEndReached}
-      // 완전 다 안닿아도, 데이터를 페칭해오게함.
       onEndReachedThreshold={0.5}
-      // 새로고침 기능
       refreshing={isRefreshing}
       onRefresh={handleRefresh}
-      // ios 스크롤바 가운데에 오는 버그
       scrollIndicatorInsets={{right: 1}}
-      indicatorStyle="black"
+      indicatorStyle={theme === 'dark' ? 'white' : 'black'}
     />
   );
-};
+}
 
 const styles = StyleSheet.create({
   contentContainer: {

@@ -1,8 +1,9 @@
-import {colors} from '@/constants';
-import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
 import React, {ReactNode} from 'react';
 import {Pressable, PressableProps, StyleSheet, Text} from 'react-native';
+
+import {colors} from '@/constants';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types';
 
 interface HeaderButtonProps extends PressableProps {
   labelText?: string;
@@ -18,6 +19,7 @@ function HeaderButton({
 }: HeaderButtonProps) {
   const {theme} = useThemeStore();
   const styles = styling(theme);
+
   return (
     <Pressable disabled={hasError} style={styles.container} {...props}>
       {!labelText && icon}

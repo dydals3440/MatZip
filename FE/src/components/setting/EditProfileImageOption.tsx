@@ -1,5 +1,4 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
 import {CompoundOption} from '../common/CompoundOption';
 
 interface EditProfileImageOptionProps {
@@ -8,17 +7,17 @@ interface EditProfileImageOptionProps {
   onChangeImage: () => void;
 }
 
-const EditProfileImageOption = ({
+function EditProfileImageOption({
   isVisible,
   hideOption,
   onChangeImage,
-}: EditProfileImageOptionProps) => {
+}: EditProfileImageOptionProps) {
   return (
     <CompoundOption isVisible={isVisible} hideOption={hideOption}>
       <CompoundOption.Background>
         <CompoundOption.Container>
           <CompoundOption.Button onPress={onChangeImage}>
-            앨범에서 사진 선택
+            앨범에서 사진선택
           </CompoundOption.Button>
         </CompoundOption.Container>
 
@@ -30,8 +29,6 @@ const EditProfileImageOption = ({
       </CompoundOption.Background>
     </CompoundOption>
   );
-};
-
-const styles = StyleSheet.create({});
+}
 
 export default EditProfileImageOption;

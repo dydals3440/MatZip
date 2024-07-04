@@ -3,8 +3,8 @@ import {StyleSheet, TextInput, TextInputProps, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {colors} from '@/constants';
+import {ThemeMode} from '@/types';
 import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
 
 interface SearchInputProps extends TextInputProps {
   onSubmit: () => void;
@@ -13,6 +13,7 @@ interface SearchInputProps extends TextInputProps {
 function SearchInput({onSubmit, ...props}: SearchInputProps) {
   const {theme} = useThemeStore();
   const styles = styling(theme);
+
   return (
     <View style={styles.container}>
       <TextInput

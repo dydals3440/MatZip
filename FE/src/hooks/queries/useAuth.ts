@@ -209,6 +209,7 @@ function useAuth() {
     // refreshToken이 성공할때 가져올 수 있게
     enabled: refreshTokenQuery.isSuccess,
   });
+  // getRefreshTokenQuery가 성공하면 로그인도 됨. 그래서, 그 여부도 처리해줌.
   const isLogin = getProfileQuery.isSuccess;
   const loginMutation = useEmailLogin();
   const kakaoLoginMutation = useKakaoLogin();

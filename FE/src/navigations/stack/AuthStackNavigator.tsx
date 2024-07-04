@@ -1,24 +1,27 @@
-import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
+import {StyleSheet} from 'react-native';
+import {createStackNavigator} from '@react-navigation/stack';
 
-import {authNavigations, colors} from '@/constants';
 import AuthHomeScreen from '@/screens/auth/AuthHomeScreen';
 import LoginScreen from '@/screens/auth/LoginScreen';
-import SignUpScreen from '@/screens/auth/SignUpScreen';
+
+import {authNavigations, colors} from '@/constants';
 import KakaoLoginScreen from '@/screens/auth/KakaoLoginScreen';
 import useThemeStore from '@/store/useThemeStore';
+import SignupScreen from '@/screens/auth/SignUpScreen';
 
-export type AuthStackParamlist = {
+export type AuthStackParamList = {
   [authNavigations.AUTH_HOME]: undefined;
   [authNavigations.LOGIN]: undefined;
   [authNavigations.SIGNUP]: undefined;
   [authNavigations.KAKAO]: undefined;
 };
 
-const Stack = createStackNavigator<AuthStackParamlist>();
+const Stack = createStackNavigator<AuthStackParamList>();
 
 function AuthStackNavigator() {
   const {theme} = useThemeStore();
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -26,8 +29,8 @@ function AuthStackNavigator() {
           backgroundColor: colors[theme].WHITE,
         },
         headerStyle: {
-          backgroundColor: colors[theme].WHITE,
           shadowColor: colors[theme].GRAY_200,
+          backgroundColor: colors[theme].WHITE,
         },
         headerTitleStyle: {
           fontSize: 15,
@@ -51,7 +54,7 @@ function AuthStackNavigator() {
       />
       <Stack.Screen
         name={authNavigations.SIGNUP}
-        component={SignUpScreen}
+        component={SignupScreen}
         options={{
           headerTitle: '회원가입',
         }}
@@ -66,5 +69,7 @@ function AuthStackNavigator() {
     </Stack.Navigator>
   );
 }
+
+const styles = StyleSheet.create({});
 
 export default AuthStackNavigator;

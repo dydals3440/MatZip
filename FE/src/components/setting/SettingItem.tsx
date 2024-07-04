@@ -2,8 +2,8 @@ import React, {ReactNode} from 'react';
 import {StyleSheet, Text, Pressable, PressableProps, View} from 'react-native';
 
 import {colors} from '@/constants';
+import {ThemeMode} from '@/types';
 import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
 
 interface SettingItemProps extends PressableProps {
   title: string;

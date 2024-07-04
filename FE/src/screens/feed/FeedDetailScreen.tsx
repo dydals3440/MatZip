@@ -1,14 +1,3 @@
-import {
-  colorHex,
-  colors,
-  feedNavigations,
-  mainNavigations,
-  mapNavigations,
-  settingNavigations,
-} from '@/constants';
-import useGetPost from '@/hooks/queries/useGetPost';
-import {FeedStackParamlist} from '@/navigations/stack/FeedStackNavigator';
-import {StackScreenProps} from '@react-navigation/stack';
 import React, {useEffect} from 'react';
 import {
   Dimensions,
@@ -21,8 +10,20 @@ import {
   Text,
   View,
 } from 'react-native';
+import {StackScreenProps} from '@react-navigation/stack';
 import Octicons from 'react-native-vector-icons/Octicons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import {FeedStackParamList} from '@/navigations/stack/FeedStackNavigator';
+import useGetPost from '@/hooks/queries/useGetPost';
+import {
+  colorHex,
+  colors,
+  feedNavigations,
+  mainNavigations,
+  mapNavigations,
+  settingNavigations,
+} from '@/constants';
 import {getDateLocaleFormat} from '@/utils';
 import PreviewImageList from '@/components/common/PreviewImageList';
 import CustomButton from '@/components/common/CustomButton';
@@ -33,20 +34,18 @@ import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
 import useLocationStore from '@/store/useLocationStore';
 import useModal from '@/hooks/useModal';
 import FeedDetailOption from '@/components/feed/FeedDetailOption';
-import useDetailStore from '@/store/useDetailPostStore';
+import useDetailPostStore from '@/store/useDetailPostStore';
 import useMutateFavoritePost from '@/hooks/queries/useMutateFavoritePost';
 import useAuth from '@/hooks/queries/useAuth';
-
-import {ThemeMode} from '@/types/common';
-import useThemeStorage from '@/hooks/useThemeStorage';
+import {ThemeMode} from '@/types';
 import useThemeStore from '@/store/useThemeStore';
 
 type FeedDetailScreenProps = CompositeScreenProps<
-  StackScreenProps<FeedStackParamlist, typeof feedNavigations.FEED_DETAIL>,
+  StackScreenProps<FeedStackParamList, typeof feedNavigations.FEED_DETAIL>,
   DrawerScreenProps<MainDrawerParamList>
 >;
 
-const FeedDetailScreen = ({route, navigation}: FeedDetailScreenProps) => {
+function FeedDetailScreen({route, navigation}: FeedDetailScreenProps) {
   const {theme} = useThemeStore();
   const styles = styling(theme);
   const {id} = route.params;
@@ -56,12 +55,12 @@ const FeedDetailScreen = ({route, navigation}: FeedDetailScreenProps) => {
   const favoriteMutation = useMutateFavoritePost();
   const insets = useSafeAreaInsets();
   const {setMoveLocation} = useLocationStore();
+  const {setDetailPost} = useDetailPostStore();
   const detailOption = useModal();
-  const {setDetailPost} = useDetailStore();
 
   useEffect(() => {
     post && setDetailPost(post);
-  }, [post]);
+  }, [post, setDetailPost]);
 
   if (isPending || isError) {
     return <></>;
@@ -70,7 +69,6 @@ const FeedDetailScreen = ({route, navigation}: FeedDetailScreenProps) => {
   const handlePressLocation = () => {
     const {latitude, longitude} = post;
     setMoveLocation({latitude, longitude});
-    // mainNavigation Home에 있는 MapNavigation Home으로 이동!
     navigation.navigate(mainNavigations.HOME, {
       screen: mapNavigations.MAP_HOME,
     });
@@ -112,8 +110,9 @@ const FeedDetailScreen = ({route, navigation}: FeedDetailScreenProps) => {
             />
           </View>
         </SafeAreaView>
+
         <View style={styles.imageContainer}>
-          {post?.images.length > 0 && (
+          {post.images.length > 0 && (
             <Image
               style={styles.image}
               source={{
@@ -121,7 +120,7 @@ const FeedDetailScreen = ({route, navigation}: FeedDetailScreenProps) => {
                   Platform.OS === 'ios'
                     ? 'http://localhost:3030/'
                     : 'http://10.0.2.2:3030/'
-                }${post?.images[0].uri}`,
+                }${post.images[0].uri}`,
               }}
               resizeMode="cover"
             />
@@ -132,6 +131,7 @@ const FeedDetailScreen = ({route, navigation}: FeedDetailScreenProps) => {
             </View>
           )}
         </View>
+
         <View style={styles.contentsContainer}>
           <View style={styles.addressContainer}>
             <Octicons
@@ -188,6 +188,7 @@ const FeedDetailScreen = ({route, navigation}: FeedDetailScreenProps) => {
           </View>
           <Text style={styles.descriptionText}>{post.description}</Text>
         </View>
+
         {post.images.length > 0 && (
           <View style={styles.imageContentsContainer}>
             <PreviewImageList imageUris={post.images} zoomEnable />
@@ -232,7 +233,7 @@ const FeedDetailScreen = ({route, navigation}: FeedDetailScreenProps) => {
       />
     </>
   );
-};
+}
 
 const styling = (theme: ThemeMode) =>
   StyleSheet.create({

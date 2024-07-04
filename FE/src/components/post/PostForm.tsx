@@ -1,40 +1,35 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
-  Image,
-  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
   TextInput,
   View,
 } from 'react-native';
-
 import Octicons from 'react-native-vector-icons/Octicons';
+import {LatLng} from 'react-native-maps';
+import {useNavigation} from '@react-navigation/core';
+import {StackNavigationProp} from '@react-navigation/stack';
 
-import InputField from '@/components/common/InputField';
-import {colors} from '@/constants';
-
-import CustomButton from '@/components/common/CustomButton';
-import useForm from '@/hooks/useForm';
-import {getDateWithSeparator, validateAddPost} from '@/utils';
-import AddPostHeaderRight from '@/components/post/AddPostHeaderRight';
-import useMutationCreatePost from '@/hooks/queries/useMutateCreatePost';
-import {MarkerColor} from '@/types/domain';
+import {FeedStackParamList} from '@/navigations/stack/FeedStackNavigator';
+import useMutateCreatePost from '@/hooks/queries/useMutateCreatePost';
 import useGetAddress from '@/hooks/useGetAddress';
+import useModal from '@/hooks/useModal';
+import useForm from '@/hooks/useForm';
+import usePermission from '@/hooks/usePermission';
+import useImagePicker from '@/hooks/useImagePicker';
+import InputField from '@/components/common/InputField';
+import CustomButton from '@/components/common/CustomButton';
+import AddPostHeaderRight from '@/components/post/AddPostHeaderRight';
 import MarkerSelector from '@/components/post/MarkerSelector';
 import ScoreInput from '@/components/post/ScoreInput';
 import DatePickerOption from '@/components/post/DatePickerOption';
-import useModal from '@/hooks/useModal';
 import ImageInput from '@/components/post/ImageInput';
-import usePermission from '@/hooks/usePermission';
-import useImagePicker from '@/hooks/useImagePicker';
 import PreviewImageList from '@/components/common/PreviewImageList';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {FeedStackParamlist} from '@/navigations/stack/FeedStackNavigator';
-import {LatLng} from 'react-native-maps';
-import useDetailStore from '@/store/useDetailPostStore';
+import {getDateWithSeparator, validateAddPost} from '@/utils';
+import {colors} from '@/constants';
+import {MarkerColor, ThemeMode} from '@/types';
+import useDetailPostStore from '@/store/useDetailPostStore';
 import useMutateUpdatePost from '@/hooks/queries/useMutateUpdatePost';
 import useThemeStore from '@/store/useThemeStore';
 
@@ -43,15 +38,15 @@ interface PostFormProps {
   location: LatLng;
 }
 
-const PostForm = ({location, isEdit = false}: PostFormProps) => {
+function PostForm({location, isEdit = false}: PostFormProps) {
   const {theme} = useThemeStore();
-  const navigation = useNavigation<StackNavigationProp<FeedStackParamlist>>();
+  const navigation = useNavigation<StackNavigationProp<FeedStackParamList>>();
   const descriptionRef = useRef<TextInput | null>(null);
-  const createPost = useMutationCreatePost();
+  const createPost = useMutateCreatePost();
   const updatePost = useMutateUpdatePost();
-  // 수정하기 두개
-  const {detailPost} = useDetailStore();
+  const {detailPost} = useDetailPostStore();
   const isEditMode = isEdit && detailPost;
+  const address = useGetAddress(location);
   const addPost = useForm({
     initialValue: {
       title: isEditMode ? detailPost.title : '',
@@ -59,28 +54,27 @@ const PostForm = ({location, isEdit = false}: PostFormProps) => {
     },
     validate: validateAddPost,
   });
-  const address = useGetAddress(location);
-
-  const [markerColor, setMarkerColor] = useState<MarkerColor>('RED');
-
+  const datePickerModal = useModal();
   const [date, setDate] = useState(
     isEditMode ? new Date(String(detailPost.date)) : new Date(),
   );
-  const [score, setScore] = useState(isEditMode ? detailPost.score : 5);
-  const dateOption = useModal();
   const [isPicked, setIsPicked] = useState(false);
+  const [markerColor, setMarkerColor] = useState<MarkerColor>(
+    isEditMode ? detailPost.color : 'RED',
+  );
+  const [score, setScore] = useState(isEditMode ? detailPost.score : 5);
   const imagePicker = useImagePicker({
     initialImages: isEditMode ? detailPost.images : [],
   });
   usePermission('PHOTO');
 
-  const handleConfirmDate = () => {
-    setIsPicked(true);
-    dateOption.hide();
-  };
-
   const handleChangeDate = (pickedDate: Date) => {
     setDate(pickedDate);
+  };
+
+  const handleConfirmDate = () => {
+    setIsPicked(true);
+    datePickerModal.hide();
   };
 
   const handleSelectMarker = (name: MarkerColor) => {
@@ -123,7 +117,7 @@ const PostForm = ({location, isEdit = false}: PostFormProps) => {
     navigation.setOptions({
       headerRight: () => AddPostHeaderRight(handleSubmit),
     });
-  });
+  }, [handleSubmit, navigation]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -131,7 +125,7 @@ const PostForm = ({location, isEdit = false}: PostFormProps) => {
         <View style={styles.inputContainer}>
           <InputField
             value={address}
-            disabled
+            disabled={true}
             icon={
               <Octicons
                 name="location"
@@ -145,67 +139,66 @@ const PostForm = ({location, isEdit = false}: PostFormProps) => {
             size="large"
             label={
               isPicked || isEdit
-                ? getDateWithSeparator(date, '. ')
+                ? `${getDateWithSeparator(date, '. ')}`
                 : '날짜 선택'
             }
-            onPress={dateOption.show}
+            onPress={datePickerModal.show}
           />
           <InputField
-            placeholder="제목을 입력하세요."
+            {...addPost.getTextInputProps('title')}
             error={addPost.errors.title}
             touched={addPost.touched.title}
+            placeholder="제목을 입력하세요."
             returnKeyType="next"
             blurOnSubmit={false}
-            onSubmitEditing={() => descriptionRef.current?.focus()}
-            {...addPost.getTextInputProps('title')}
+            onSubmitEditing={() => {
+              descriptionRef.current?.focus();
+            }}
           />
           <InputField
-            ref={descriptionRef}
-            placeholder="기록하고 싶은 내용을 입력하세요. (선택)"
+            {...addPost.getTextInputProps('description')}
             error={addPost.errors.description}
             touched={addPost.touched.description}
-            // enter눌렀을떄 다음줄 받을 수 있음
-            multiline
-            blurOnSubmit={false}
+            ref={descriptionRef}
+            placeholder="기록하고 싶은 내용을 입력하세요. (선택)"
             returnKeyType="next"
-            {...addPost.getTextInputProps('description')}
+            multiline
+          />
+          <MarkerSelector
+            score={score}
+            markerColor={markerColor}
+            onPressMarker={handleSelectMarker}
+          />
+          <ScoreInput score={score} onChangeScore={handleChangeScore} />
+          <View style={styles.imagesViewer}>
+            <ImageInput onChange={imagePicker.handleChange} />
+            <PreviewImageList
+              imageUris={imagePicker.imageUris}
+              onDelete={imagePicker.delete}
+              onChangeOrder={imagePicker.changeOrder}
+              showOption
+            />
+          </View>
+          <DatePickerOption
+            date={date}
+            isVisible={datePickerModal.isVisible}
+            onChangeDate={handleChangeDate}
+            onConfirmDate={handleConfirmDate}
           />
         </View>
-        <MarkerSelector
-          score={score}
-          markerColor={markerColor}
-          onPressMarker={handleSelectMarker}
-        />
-        <ScoreInput score={score} onChangeScore={handleChangeScore} />
-
-        <View style={styles.imagesViewer}>
-          <ImageInput onChange={imagePicker.handleChange} />
-          <PreviewImageList
-            imageUris={imagePicker.imageUris}
-            onDelete={imagePicker.delete}
-            onChangeOrder={imagePicker.changeOrder}
-            showOption
-          />
-        </View>
-        <DatePickerOption
-          date={date}
-          isVisible={dateOption.isVisible}
-          onChangeDate={handleChangeDate}
-          onConfirmDate={handleConfirmDate}
-        />
       </ScrollView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   contentContainer: {
+    flex: 1,
     padding: 20,
     marginBottom: 10,
-    flex: 1,
   },
   inputContainer: {
     gap: 20,
@@ -215,5 +208,4 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
 });
-
 export default PostForm;

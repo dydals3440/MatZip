@@ -1,21 +1,19 @@
+import React, {useRef} from 'react';
 import {SafeAreaView, StyleSheet, TextInput, View} from 'react-native';
+import Toast from 'react-native-toast-message';
+
 import InputField from '@/components/common/InputField';
 import CustomButton from '@/components/common/CustomButton';
 import useForm from '@/hooks/useForm';
-import {validateLogin} from '@/utils';
-import {useRef} from 'react';
 import useAuth from '@/hooks/queries/useAuth';
-import Toast from 'react-native-toast-message';
+import {validateLogin} from '@/utils';
 import {errorMessages} from '@/constants';
 
 function LoginScreen() {
-  const passwordRef = useRef<TextInput | null>(null);
   const {loginMutation} = useAuth();
+  const passwordRef = useRef<TextInput | null>(null);
   const login = useForm({
-    initialValue: {
-      email: '',
-      password: '',
-    },
+    initialValue: {email: '', password: ''},
     validate: validateLogin,
   });
 
@@ -44,24 +42,16 @@ function LoginScreen() {
           blurOnSubmit={false}
           onSubmitEditing={() => passwordRef.current?.focus()}
           {...login.getTextInputProps('email')}
-          // value={values.email}
-          // onChangeText={text => handleChangeText('email', text)}
-          // onBlur={() => handleBlur('email')}
         />
         <InputField
           ref={passwordRef}
           placeholder="비밀번호"
           error={login.errors.password}
           touched={login.touched.password}
-          // 비밀번호 masking 처리.
           secureTextEntry
-          blurOnSubmit={false}
           returnKeyType="join"
           onSubmitEditing={handleSubmit}
           {...login.getTextInputProps('password')}
-          // value={values.password}
-          // onChangeText={text => handleChangeText('password', text)}
-          // onBlur={() => handleBlur('password')}
         />
       </View>
       <CustomButton

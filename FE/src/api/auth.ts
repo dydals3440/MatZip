@@ -1,6 +1,6 @@
 import axiosInstance from './axios';
-import {Category, Profile} from '../types/domain';
-import {getEncryptStorage} from '../utils';
+import {getEncryptStorage} from '@/utils';
+import type {Category, Profile} from '@/types/domain';
 
 type RequestUser = {
   email: string;
@@ -22,10 +22,7 @@ const postLogin = async ({
   email,
   password,
 }: RequestUser): Promise<ResponseToken> => {
-  const {data} = await axiosInstance.post('/auth/signin', {
-    email,
-    password,
-  });
+  const {data} = await axiosInstance.post('/auth/signin', {email, password});
 
   return data;
 };
@@ -46,6 +43,7 @@ const appleLogin = async (
   body: RequestAppleIdentity,
 ): Promise<ResponseToken> => {
   const {data} = await axiosInstance.post('/auth/oauth/apple', body);
+
   return data;
 };
 
@@ -56,6 +54,7 @@ const getProfile = async (): Promise<ResponseProfile> => {
 
   return data;
 };
+
 type RequestProfile = Omit<
   Profile,
   'id' | 'email' | 'kakaoImageUri' | 'loginType'
@@ -68,7 +67,6 @@ const editProfile = async (body: RequestProfile): Promise<ResponseProfile> => {
 };
 
 const getAccessToken = async (): Promise<ResponseToken> => {
-  // token을 refresh 성공한다는거 자체가, 이미 로그인한 적이 있어서, refreshToken이 저장되어 있는 유저다.
   const refreshToken = await getEncryptStorage('refreshToken');
 
   const {data} = await axiosInstance.get('/auth/refresh', {
@@ -106,7 +104,6 @@ export {
   deleteAccount,
   editCategory,
 };
-
 export type {
   RequestUser,
   ResponseToken,

@@ -1,15 +1,22 @@
 import React from 'react';
-import {Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
-import CustomMarker from '../common/CustomMarker';
-import {colors} from '@/constants';
-import {MarkerColor} from '@/types/domain';
-import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  PressableProps,
+  ScrollView,
+} from 'react-native';
 
-interface MarkerSelectorProps {
+import {colors} from '@/constants';
+import type {MarkerColor, ThemeMode} from '@/types';
+import CustomMarker from '../common/CustomMarker';
+import useThemeStore from '@/store/useThemeStore';
+
+interface MarkerSelectorProps extends PressableProps {
   markerColor: MarkerColor;
-  onPressMarker: (color: MarkerColor) => void;
-  score: number;
+  onPressMarker: (name: MarkerColor) => void;
+  score?: number;
 }
 
 const categoryList: MarkerColor[] = [
@@ -22,7 +29,7 @@ const categoryList: MarkerColor[] = [
 
 const MarkerSelector = ({
   markerColor,
-  score,
+  score = 5,
   onPressMarker,
 }: MarkerSelectorProps) => {
   const {theme} = useThemeStore();
@@ -30,18 +37,19 @@ const MarkerSelector = ({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.markerLabel}>마커 선택</Text>
+      <Text style={styles.markerLabel}>마커선택</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <View style={styles.markerInputScroll}>
           {categoryList.map(color => {
             return (
               <Pressable
+                key={color}
                 style={[
                   styles.markerBox,
                   markerColor === color && styles.pressedMarker,
                 ]}
                 onPress={() => onPressMarker(color)}>
-                <CustomMarker score={score} color={color} />
+                <CustomMarker color={color} score={score} />
               </Pressable>
             );
           })}
@@ -58,13 +66,13 @@ const styling = (theme: ThemeMode) =>
       borderColor: colors[theme].GRAY_200,
       padding: 15,
     },
-    markerLabel: {
-      marginBottom: 15,
-      color: colors[theme].GRAY_700,
-    },
     markerInputScroll: {
       flexDirection: 'row',
       gap: 20,
+    },
+    markerLabel: {
+      marginBottom: 15,
+      color: colors[theme].GRAY_700,
     },
     markerBox: {
       alignItems: 'center',

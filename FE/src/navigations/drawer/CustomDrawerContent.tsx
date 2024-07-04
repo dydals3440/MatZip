@@ -1,11 +1,4 @@
-import {colors, mainNavigations, settingNavigations} from '@/constants';
-import useAuth from '@/hooks/queries/useAuth';
-import {
-  DrawerContentComponentProps,
-  DrawerContentScrollView,
-  DrawerItemList,
-} from '@react-navigation/drawer';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import React from 'react';
 import {
   Image,
   Platform,
@@ -15,8 +8,17 @@ import {
   Text,
   View,
 } from 'react-native';
+import {
+  DrawerContentComponentProps,
+  DrawerContentScrollView,
+  DrawerItemList,
+} from '@react-navigation/drawer';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
+import useAuth from '@/hooks/queries/useAuth';
+import {colors, mainNavigations, settingNavigations} from '@/constants';
 import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
+import {ThemeMode} from '@/types';
 
 function CustomDrawerContent(props: DrawerContentComponentProps) {
   const {theme} = useThemeStore();
@@ -37,7 +39,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
         scrollEnabled={false}
         contentContainerStyle={styles.contentContainer}>
         <View style={styles.userInfoContainer}>
-          <View style={styles.userImageContainer}>
+          <Pressable style={styles.userImageContainer}>
             {imageUri === null && kakaoImageUri === null && (
               <Image
                 source={require('@/assets/user-default.png')}
@@ -68,11 +70,13 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
                 style={styles.userImage}
               />
             )}
-          </View>
+          </Pressable>
+
           <Text style={styles.nameText}>{nickname ?? email}</Text>
         </View>
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
+
       <View style={styles.bottomContainer}>
         <Pressable style={styles.bottomMenu} onPress={handlePressSetting}>
           <MaterialIcons
@@ -95,20 +99,20 @@ const styling = (theme: ThemeMode) =>
     contentContainer: {
       backgroundColor: colors[theme].WHITE,
     },
+    nameText: {
+      color: colors[theme].BLACK,
+    },
     userInfoContainer: {
       alignItems: 'center',
       marginTop: 15,
       marginBottom: 30,
       marginHorizontal: 15,
     },
-    nameText: {
-      color: colors[theme].BLACK,
-    },
     userImageContainer: {
       width: 70,
       height: 70,
       borderRadius: 35,
-      margin: 10,
+      marginBottom: 10,
     },
     userImage: {
       width: '100%',

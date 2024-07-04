@@ -1,26 +1,24 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-
-import useDetailStore from '@/store/useDetailPostStore';
+import {StyleSheet} from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
-import {FeedStackParamlist} from '@/navigations/stack/FeedStackNavigator';
-import {feedNavigations} from '@/constants';
+
 import ImageCarousel from '@/components/common/ImageCarousel';
+import {feedNavigations} from '@/constants';
+import {FeedStackParamList} from '@/navigations/stack/FeedStackNavigator';
+import useDetailStore from '@/store/useDetailPostStore';
 
 type ImageZoomScreenProps = StackScreenProps<
-  FeedStackParamlist,
+  FeedStackParamList,
   typeof feedNavigations.IMAGE_ZOOM
 >;
 
-const ImageZoomScreen = ({route}: ImageZoomScreenProps) => {
-  // 인덱스는 어떤 이미지를 클릭했는지 판단할 떄 씀
+function ImageZoomScreen({route}: ImageZoomScreenProps) {
   const {index} = route.params;
   const {detailPost} = useDetailStore();
+
   return (
     <ImageCarousel images={detailPost?.images ?? []} pressedIndex={index} />
   );
-};
-
-const styles = StyleSheet.create({});
+}
 
 export default ImageZoomScreen;

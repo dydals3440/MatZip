@@ -1,14 +1,13 @@
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import {CompoundOption} from '../common/CompoundOption';
 import useLegendStorage from '@/hooks/useLegendStorage';
+import React from 'react';
+import {CompoundOption} from '../common/CompoundOption';
 
 interface MapLegendOptionProps {
   isVisible: boolean;
   hideOption: () => void;
 }
 
-const MapLegendOption = ({isVisible, hideOption}: MapLegendOptionProps) => {
+function MapLegendOption({isVisible, hideOption}: MapLegendOptionProps) {
   const {isVisible: isVisibleLegend, set} = useLegendStorage();
 
   const handlePressShow = () => {
@@ -46,8 +45,6 @@ const MapLegendOption = ({isVisible, hideOption}: MapLegendOptionProps) => {
       </CompoundOption.Background>
     </CompoundOption>
   );
-};
-
-const styles = StyleSheet.create({});
+}
 
 export default MapLegendOption;

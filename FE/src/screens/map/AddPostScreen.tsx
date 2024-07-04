@@ -1,7 +1,9 @@
+import React from 'react';
+import {StackScreenProps} from '@react-navigation/stack';
+
+import {MapStackParamList} from '@/navigations/stack/MapStackNavigator';
 import PostForm from '@/components/post/PostForm';
 import {mapNavigations} from '@/constants';
-import {MapStackParamList} from '@/navigations/stack/MapStackNavigator';
-import {StackScreenProps} from '@react-navigation/stack';
 
 type AddPostScreenProps = StackScreenProps<
   MapStackParamList,

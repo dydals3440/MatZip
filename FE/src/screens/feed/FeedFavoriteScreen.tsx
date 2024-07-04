@@ -1,26 +1,27 @@
-import {colors} from '@/constants';
 import React, {Suspense} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, SafeAreaView, Text} from 'react-native';
 
-import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
+import {colors} from '@/constants';
 import FeedFavoriteList from '@/components/feed/FeedFavoriteList';
+import {ThemeMode} from '@/types';
+import useThemeStore from '@/store/useThemeStore';
 import Loader from '@/components/common/Loader';
 import RetryErrorBoundary from '@/components/common/RetryErrorBoundary';
 
-const FeedFavoriteScreen = () => {
+function FeedFavoriteScreen() {
   const {theme} = useThemeStore();
   const styles = styling(theme);
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <RetryErrorBoundary>
         <Suspense fallback={<Loader />}>
           <FeedFavoriteList />
         </Suspense>
       </RetryErrorBoundary>
-    </View>
+    </SafeAreaView>
   );
-};
+}
 
 const styling = (theme: ThemeMode) =>
   StyleSheet.create({
@@ -29,5 +30,4 @@ const styling = (theme: ThemeMode) =>
       backgroundColor: colors[theme].WHITE,
     },
   });
-
 export default FeedFavoriteScreen;

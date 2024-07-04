@@ -4,7 +4,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 
 import {colors} from '@/constants';
 import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
+import {ThemeMode} from '@/types';
 
 interface PaginationProps {
   pageParam: number;

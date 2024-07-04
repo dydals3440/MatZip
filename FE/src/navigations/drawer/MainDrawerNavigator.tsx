@@ -1,27 +1,25 @@
+import {Dimensions} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
+import {NavigatorScreenParams, RouteProp} from '@react-navigation/native';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
+import CustomDrawerContent from './CustomDrawerContent';
 import CalendarHomeScreen from '@/screens/calendar/CalendarHomeScreen';
 import MapStackNavigator, {MapStackParamList} from '../stack/MapStackNavigator';
-import {colors, mainNavigations} from '@/constants';
-import {NavigatorScreenParams, RouteProp} from '@react-navigation/native';
-
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {Dimensions} from 'react-native';
-import CustomDrawerContent from './CustomDrawerContent';
-
 import FeedTabNavigator, {FeedTabParamList} from '../tab/FeedTabNavigator';
+import {colors, mainNavigations} from '@/constants';
 import FeedHomeHeaderLeft from '@/components/feed/FeedHomeHeaderLeft';
 import SettingStackNavigator, {
-  SettingStackParamlist,
+  SettingStackParamList,
 } from '../stack/SettingStackNavigator';
 import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
+import {ThemeMode} from '@/types';
 
 export type MainDrawerParamList = {
   [mainNavigations.HOME]: NavigatorScreenParams<MapStackParamList>;
   [mainNavigations.FEED]: NavigatorScreenParams<FeedTabParamList>;
   [mainNavigations.CALENDAR]: undefined;
-  [mainNavigations.SETTING]: NavigatorScreenParams<SettingStackParamlist>;
+  [mainNavigations.SETTING]: NavigatorScreenParams<SettingStackParamList>;
 };
 
 const Drawer = createDrawerNavigator<MainDrawerParamList>();
@@ -55,8 +53,8 @@ function DrawerIcons(
   return (
     <MaterialIcons
       name={iconName}
-      size={18}
       color={focused ? colors[theme].UNCHANGE_BLACK : colors[theme].GRAY_500}
+      size={18}
     />
   );
 }
@@ -76,7 +74,6 @@ function MainDrawerNavigator() {
         },
         drawerActiveTintColor: colors[theme].UNCHANGE_BLACK,
         drawerInactiveTintColor: colors[theme].GRAY_500,
-        // 클릭시 색상
         drawerActiveBackgroundColor:
           theme === 'light' ? colors[theme].PINK_200 : colors[theme].PINK_500,
         drawerInactiveBackgroundColor: colors[theme].GRAY_100,
@@ -90,7 +87,6 @@ function MainDrawerNavigator() {
         component={MapStackNavigator}
         options={{
           title: '홈',
-          // 손으로, 왼쪽 끝에 이렇게 스왑했을떄 켜지는 드로어 열리는 현상. 방지.
           swipeEnabled: false,
         }}
       />

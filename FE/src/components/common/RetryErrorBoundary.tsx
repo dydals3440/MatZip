@@ -1,16 +1,16 @@
-import {useQueryErrorResetBoundary} from '@tanstack/react-query';
 import React, {PropsWithChildren} from 'react';
-import {ErrorBoundary} from 'react-error-boundary';
 import {StyleSheet, Text, View} from 'react-native';
+import {ErrorBoundary} from 'react-error-boundary';
+import {useQueryErrorResetBoundary} from '@tanstack/react-query';
 import CustomButton from './CustomButton';
+import {ThemeMode} from '@/types';
 import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
 import {colors} from '@/constants';
 
-const RetryErrorBoundary = ({children}: PropsWithChildren) => {
-  const {reset} = useQueryErrorResetBoundary();
+function RetryErrorBoundary({children}: PropsWithChildren) {
   const {theme} = useThemeStore();
   const styles = styling(theme);
+  const {reset} = useQueryErrorResetBoundary();
 
   return (
     <ErrorBoundary
@@ -32,7 +32,7 @@ const RetryErrorBoundary = ({children}: PropsWithChildren) => {
       {children}
     </ErrorBoundary>
   );
-};
+}
 
 const styling = (theme: ThemeMode) =>
   StyleSheet.create({

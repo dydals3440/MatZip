@@ -2,16 +2,11 @@ import {colors} from '@/constants';
 import {RegionInfo} from '@/hooks/useSearchLocation';
 import useLocationStore from '@/store/useLocationStore';
 import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
+import {ThemeMode} from '@/types';
 import {useNavigation} from '@react-navigation/native';
-import {
-  Dimensions,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import React from 'react';
+import {Dimensions, Pressable, ScrollView, Text} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {LatLng} from 'react-native-maps';
 import Octicons from 'react-native-vector-icons/Octicons';
 
@@ -19,7 +14,7 @@ interface SearchRegionResultProps {
   regionInfo: RegionInfo[];
 }
 
-const SearchRegionResult = ({regionInfo}: SearchRegionResultProps) => {
+function SearchRegionResult({regionInfo}: SearchRegionResultProps) {
   const {theme} = useThemeStore();
   const styles = styling(theme);
   const navigation = useNavigation();
@@ -36,6 +31,7 @@ const SearchRegionResult = ({regionInfo}: SearchRegionResultProps) => {
 
   const moveToMapScreen = (regionLocation: LatLng) => {
     navigation.goBack();
+
     setMoveLocation(regionLocation);
     setSelectLocation(regionLocation);
   };
@@ -76,6 +72,7 @@ const SearchRegionResult = ({regionInfo}: SearchRegionResultProps) => {
             <Text style={styles.subInfoText}>{info.road_address_name}</Text>
           </Pressable>
         ))}
+
         {regionInfo.length === 0 && (
           <View style={styles.noResultContainer}>
             <Text style={styles.noResultText}>검색 결과가 없습니다.</Text>
@@ -84,7 +81,7 @@ const SearchRegionResult = ({regionInfo}: SearchRegionResultProps) => {
       </ScrollView>
     </View>
   );
-};
+}
 
 const styling = (theme: ThemeMode) =>
   StyleSheet.create({
@@ -124,7 +121,7 @@ const styling = (theme: ThemeMode) =>
     itemBorder: {
       marginHorizontal: 5,
       paddingVertical: 10,
-      borderBottomColor: colors[theme].GRAY_500,
+      borderBottomColor: colors[theme].GRAY_300,
       borderBottomWidth: StyleSheet.hairlineWidth,
       gap: 3,
     },

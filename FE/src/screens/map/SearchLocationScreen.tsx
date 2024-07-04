@@ -1,12 +1,12 @@
-import Pagination from '@/components/common/Pagination';
+import React, {useState} from 'react';
+import {Keyboard, StyleSheet, View} from 'react-native';
 import SearchInput from '@/components/common/SearchInput';
 import SearchRegionResult from '@/components/map/SearchRegionResult';
 import useSearchLocation from '@/hooks/useSearchLocation';
 import useUserLocation from '@/hooks/useUserLocation';
-import React, {useState} from 'react';
-import {Keyboard, StyleSheet, View} from 'react-native';
+import Pagination from '@/components/common/Pagination';
 
-const SearchLocationScreen = () => {
+function SearchLocationScreen() {
   const [keyword, setKeyword] = useState<string>('');
   const {userLocation} = useUserLocation();
   const {regionInfo, pageParam, fetchNextPage, fetchPrevPage, hasNextPage} =
@@ -35,7 +35,7 @@ const SearchLocationScreen = () => {
       />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

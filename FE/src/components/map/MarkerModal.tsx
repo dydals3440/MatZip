@@ -12,25 +12,23 @@ import {
 } from 'react-native';
 import Octicons from 'react-native-vector-icons/Octicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
 
-import CustomMarker from '../common/CustomMarker';
+import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
+import useGetPost from '@/hooks/queries/useGetPost';
 import {
   colors,
   feedNavigations,
   feedTabNavigations,
   mainNavigations,
 } from '@/constants';
-import useGetPost from '@/hooks/queries/useGetPost';
 import {getDateWithSeparator} from '@/utils';
-import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {FeedStackParamlist} from '@/navigations/stack/FeedStackNavigator';
-import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
+import CustomMarker from '../common/CustomMarker';
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {FeedTabParamList} from '@/navigations/tab/FeedTabNavigator';
+import {ThemeMode} from '@/types';
 import useThemeStore from '@/store/useThemeStore';
-import {ThemeMode} from '@/types/common';
 
 interface MarkerModalProps {
   markerId: number | null;
@@ -43,7 +41,7 @@ type Navigation = CompositeNavigationProp<
   BottomTabNavigationProp<FeedTabParamList>
 >;
 
-const MarkerModal = ({markerId, isVisible, hide}: MarkerModalProps) => {
+function MarkerModal({markerId, isVisible, hide}: MarkerModalProps) {
   const {theme} = useThemeStore();
   const styles = styling(theme);
   const navigation = useNavigation<Navigation>();
@@ -55,7 +53,6 @@ const MarkerModal = ({markerId, isVisible, hide}: MarkerModalProps) => {
 
   const handlePressModal = () => {
     navigation.navigate(mainNavigations.FEED, {
-      // 홈 먼저 들어 간 후,
       screen: feedTabNavigations.FEED_HOME,
       params: {
         screen: feedNavigations.FEED_DETAIL,
@@ -64,20 +61,18 @@ const MarkerModal = ({markerId, isVisible, hide}: MarkerModalProps) => {
         },
         initial: false,
       },
-      // 피드 목록으로 못들어가는 현상, 드로어에서 피드 클릭시
-      // initial false시 스크린 이동시 해당 스크린이 초기 화면으로 지정되는 현상 방지
     });
 
     hide();
   };
 
   return (
-    <Modal visible={isVisible} transparent={true} animationType="slide">
-      <SafeAreaView style={styles.optionBackground} onTouchEnd={hide}>
+    <Modal visible={isVisible} transparent={true} animationType={'slide'}>
+      <SafeAreaView style={[styles.optionBackground]} onTouchEnd={hide}>
         <Pressable style={styles.cardContainer} onPress={handlePressModal}>
           <View style={styles.cardInner}>
             <View style={styles.cardAlign}>
-              {post?.images.length > 0 && (
+              {post.images.length > 0 && (
                 <View style={styles.imageContainer}>
                   <Image
                     style={styles.image}
@@ -92,7 +87,7 @@ const MarkerModal = ({markerId, isVisible, hide}: MarkerModalProps) => {
                   />
                 </View>
               )}
-              {post?.images.length === 0 && (
+              {post.images.length === 0 && (
                 <View
                   style={[styles.imageContainer, styles.emptyImageContainer]}>
                   <CustomMarker color={post.color} score={post.score} />
@@ -102,23 +97,24 @@ const MarkerModal = ({markerId, isVisible, hide}: MarkerModalProps) => {
                 <View style={styles.addressContainer}>
                   <Octicons
                     name="location"
-                    size={16}
+                    size={10}
                     color={colors[theme].GRAY_500}
                   />
                   <Text
-                    numberOfLines={1}
+                    style={styles.addressText}
                     ellipsizeMode="tail"
-                    style={styles.addressText}>
-                    {post?.address}
+                    numberOfLines={1}>
+                    {post.address}
                   </Text>
                 </View>
                 <Text style={styles.titleText}>{post.title}</Text>
                 <Text style={styles.dateText}>
-                  {getDateWithSeparator(post?.date, '.')}
+                  {getDateWithSeparator(post.date, '.')}
                 </Text>
               </View>
             </View>
-            <View>
+
+            <View style={styles.nextButton}>
               <MaterialIcons
                 name="arrow-forward-ios"
                 size={20}
@@ -130,7 +126,7 @@ const MarkerModal = ({markerId, isVisible, hide}: MarkerModalProps) => {
       </SafeAreaView>
     </Modal>
   );
-};
+}
 
 const styling = (theme: ThemeMode) =>
   StyleSheet.create({

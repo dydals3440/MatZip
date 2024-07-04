@@ -1,5 +1,5 @@
-import {StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
+import {StackScreenProps} from '@react-navigation/stack';
 import {
   Dimensions,
   Image,
@@ -10,25 +10,31 @@ import {
   Text,
   View,
 } from 'react-native';
-import {AuthStackParamlist} from '@/navigations/stack/AuthStackNavigator';
-import {authNavigations} from '@/constants/navigations';
-import CustomButton from '@/components/common/CustomButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import appleAuth, {
+import {
+  appleAuth,
   AppleButton,
+  AppleError,
 } from '@invertase/react-native-apple-authentication';
-import {colors} from '@/constants';
+
+import {AuthStackParamList} from '@/navigations/stack/AuthStackNavigator';
+import CustomButton from '@/components/common/CustomButton';
+import {authNavigations, colors} from '@/constants';
 import useAuth from '@/hooks/queries/useAuth';
 import Toast from 'react-native-toast-message';
-import Config from 'react-native-config';
+import useThemeStore from '@/store/useThemeStore';
+import {ThemeMode} from '@/types';
 
 type AuthHomeScreenProps = StackScreenProps<
-  AuthStackParamlist,
+  AuthStackParamList,
   typeof authNavigations.AUTH_HOME
 >;
 
 function AuthHomeScreen({navigation}: AuthHomeScreenProps) {
+  const {theme} = useThemeStore();
+  const styles = styling(theme);
   const {appleLoginMutation} = useAuth();
+
   const handlePressAppleLogin = async () => {
     try {
       const {identityToken, fullName} = await appleAuth.performRequest({
@@ -39,7 +45,7 @@ function AuthHomeScreen({navigation}: AuthHomeScreenProps) {
       if (identityToken) {
         appleLoginMutation.mutate({
           identityToken,
-          appId: `${Config.APPLE_APP_ID}`,
+          appId: 'org.reactjs.native.example.MatzipApp',
           nickname: fullName?.givenName ?? null,
         });
       }
@@ -60,9 +66,10 @@ function AuthHomeScreen({navigation}: AuthHomeScreenProps) {
         <Image
           resizeMode="contain"
           style={styles.image}
-          source={require('../../assets/matzip.png')}
+          source={require('@/assets/matzip.png')}
         />
       </View>
+
       <View style={styles.buttonContainer}>
         {Platform.OS === 'ios' && (
           <AppleButton
@@ -94,42 +101,44 @@ function AuthHomeScreen({navigation}: AuthHomeScreenProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    margin: 30,
-    alignItems: 'center',
-  },
-  imageContainer: {
-    flex: 1.5,
-    width: Dimensions.get('screen').width / 2,
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-  },
-  buttonContainer: {
-    flex: 1,
-    gap: 10,
-    alignItems: 'center',
-  },
-  kakaoButtonContainer: {
-    backgroundColor: '#FEE503',
-  },
-  kakaoButtonText: {
-    color: '#181600',
-  },
-  emailText: {
-    textDecorationLine: 'underline',
-    fontWeight: '500',
-    padding: 10,
-    color: colors.BLACK,
-  },
-  appleButton: {
-    width: Dimensions.get('screen').width - 60,
-    height: 45,
-    paddingVertical: 25,
-  },
-});
+const styling = (theme: ThemeMode) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      marginHorizontal: 30,
+      marginVertical: 30,
+    },
+    imageContainer: {
+      flex: 1.5,
+      width: Dimensions.get('screen').width / 2,
+    },
+    image: {
+      width: '100%',
+      height: '100%',
+    },
+    buttonContainer: {
+      flex: 1,
+      alignItems: 'center',
+      gap: 10,
+    },
+    kakaoButtonContainer: {
+      backgroundColor: '#FEE503',
+    },
+    kakaoButtonText: {
+      color: '#181600',
+    },
+    emailText: {
+      textDecorationLine: 'underline',
+      fontWeight: '500',
+      padding: 10,
+      color: colors[theme].BLACK,
+    },
+    appleButton: {
+      width: Dimensions.get('screen').width - 60,
+      height: 45,
+      paddingVertical: 25,
+    },
+  });
 
 export default AuthHomeScreen;

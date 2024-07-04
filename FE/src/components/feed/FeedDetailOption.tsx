@@ -3,9 +3,9 @@ import {Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {StackNavigationProp} from '@react-navigation/stack';
 
-import {FeedStackParamlist} from '@/navigations/stack/FeedStackNavigator';
+import {FeedStackParamList} from '@/navigations/stack/FeedStackNavigator';
 import useMutateDeletePost from '@/hooks/queries/useMutateDeletePost';
-import useDetailStore from '@/store/useDetailPostStore';
+import useDetailPostStore from '@/store/useDetailPostStore';
 import {CompoundOption} from '../common/CompoundOption';
 import {alerts, feedNavigations} from '@/constants';
 
@@ -14,12 +14,10 @@ interface FeedDetailOptionProps {
   hideOption: () => void;
 }
 
-// 피드에서 상세로 들어갔을 때 해당정보를 Zustand를 이용해서 젖아해놓는 스토어 만듬.
-
-const FeedDetailOption = ({isVisible, hideOption}: FeedDetailOptionProps) => {
-  const navigation = useNavigation<StackNavigationProp<FeedStackParamlist>>();
+function FeedDetailOption({isVisible, hideOption}: FeedDetailOptionProps) {
+  const navigation = useNavigation<StackNavigationProp<FeedStackParamList>>();
+  const {detailPost} = useDetailPostStore();
   const deletePost = useMutateDeletePost();
-  const {detailPost} = useDetailStore();
 
   const handleDeletePost = () => {
     if (!detailPost) {
@@ -29,16 +27,13 @@ const FeedDetailOption = ({isVisible, hideOption}: FeedDetailOptionProps) => {
     Alert.alert(alerts.DELETE_POST.TITLE, alerts.DELETE_POST.DESCRIPTION, [
       {
         text: '삭제',
-        onPress: () => {
+        onPress: () =>
           deletePost.mutate(detailPost.id, {
             onSuccess: () => {
-              // 옵션을 다시 닫아줌. 삭제 후
               hideOption();
-              // 다시 피드 목록으로 이동
               navigation.goBack();
             },
-          });
-        },
+          }),
         style: 'destructive',
       },
       {
@@ -59,13 +54,14 @@ const FeedDetailOption = ({isVisible, hideOption}: FeedDetailOptionProps) => {
         longitude: detailPost.longitude,
       },
     });
+    hideOption();
   };
 
   return (
     <CompoundOption isVisible={isVisible} hideOption={hideOption}>
       <CompoundOption.Background>
         <CompoundOption.Container>
-          <CompoundOption.Button isDanger onPress={handleDeletePost}>
+          <CompoundOption.Button onPress={handleDeletePost} isDanger>
             삭제하기
           </CompoundOption.Button>
           <CompoundOption.Divider />
@@ -81,6 +77,6 @@ const FeedDetailOption = ({isVisible, hideOption}: FeedDetailOptionProps) => {
       </CompoundOption.Background>
     </CompoundOption>
   );
-};
+}
 
 export default FeedDetailOption;
